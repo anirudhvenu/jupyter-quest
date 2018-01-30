@@ -22,6 +22,7 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import FilterListIcon from 'material-ui-icons/FilterList';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
 
 let counter = 0;
@@ -50,7 +51,7 @@ class EnhancedTableHead extends React.Component {
 
   render() {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
-
+   
     return (
       <TableHead>
         <TableRow>
@@ -130,7 +131,7 @@ let EnhancedTableToolbar = props => {
         {numSelected > 0 ? (
           <Typography type="subheading">{numSelected} selected</Typography>
         ) : (
-            <Typography type="title">Courses</Typography>
+          <Typography type="title">Courses</Typography>
           )}
       </div>
       <div className={classes.spacer} />
@@ -170,6 +171,28 @@ const styles = theme => ({
   },
   tableWrapper: {
     overflowX: 'auto',
+  },
+  card: {
+    minWidth: 275,
+  },
+  superCard:{
+    width:'200px',
+    marginLeft:'auto',
+    marginRight:'auto'
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    marginBottom: 16,
+    fontSize: 14,
+    color: theme.palette.text.secondary,
+  },
+  pos: {
+    marginBottom: 12,
+    color: theme.palette.text.secondary,
   },
 });
 
@@ -255,12 +278,24 @@ class CoursesContainer extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, courses } = this.props;
+    const { classes, courses, auth } = this.props;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, courses.length - page * rowsPerPage);
-
+    const bull = <span className={classes.bullet}>•</span>;
     return (
-        <div className={classes.root}>
+  <div className={classes.root}>
+
+{ !auth.emailVerified && <div  className={classes.superCard}>
+      <Card className={classes.card}>
+        <CardContent>
+          <Typography className={classes.title}>Restricted Content</Typography>
+          <Typography type="headline" component="h2">
+           Please Log In
+          </Typography>
+        </CardContent>
+      </Card>
+    </div> }
+  { auth.emailVerified && <div>
          <AppBar position="static">
           <Tabs value={this.state.value} onChange={this.handleChange}>
             <Tab label="My Course" />
@@ -331,7 +366,8 @@ class CoursesContainer extends React.Component {
         </Paper> 
         }
         {this.state.value === 1 && <h2>Joined Course</h2>}
-        {this.state.value === 2 && <h2>Public Course</h2>}
+        {this.state.value === 2 && <h2>Public Course</h2>} 
+      </div> }
   </div>
   );
 }

@@ -14,6 +14,7 @@ import CourseTable from '../components/courses';
 import CreateCourse from '../components/createCourse';
 import Paper from 'material-ui/Paper/Paper';
 import Snackbar from 'material-ui/Snackbar';
+import CoursesDetail from '../components/courseDetail'
   /**
    * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
    */
@@ -42,16 +43,16 @@ const styles = theme => ({
         name:'',
         desc:'',
         open: false,
-        vertical: null,
-        horizontal: null,
+        vertical: 'top',
+        horizontal: 'right',
         message:null
         }
         this.handleInput=this.handleInput.bind(this)
     }
 
-    handleClick = state => (msg) => {
-      console.log("called....")
-      this.setState({ open: true, vertical: 'top', horizontal: 'right',message:msg });
+
+    handleNotification = (msg) => {
+      this.setState({ open: true,message:msg });
     };
   
     handleClose = () => {
@@ -63,7 +64,6 @@ const styles = theme => ({
     }
     createCourse=()=>{
       this.setState({courseActive:true})
-      this.handleClick({vertical: 'top', horizontal: 'right' })
     }
     cancelSubmit=()=>{
       
@@ -77,26 +77,29 @@ const styles = theme => ({
       let allCourses={
         title:formData.name,
         desc:formData.desc,
-        pass:formData.password
+        pass:formData.password,
+        uid:this.props.auth.uid
       }
       // push data to <firebase></firebase>
       this.props.firebase.push('courses', allCourses).then( data => {
-        // wait for db to send response
+        // wait for db to send response\
+
+        this.handleNotification('Data Save Successfully');
         this.cancelSubmit();
-      } );
+      }) ;
       
     }
     render(){
-      const {classes, courses, firebase}  = this.props;
+      const {classes, courses, auth, firebase }  = this.props;
       const { vertical, horizontal, open, message } = this.state;
     return(
     <div>
       <AppFrame>
-        <Button raised onClick={this.createCourse}>
+       {auth.emailVerified && <Button raised onClick={this.createCourse}>
           Create a Course
-      </Button>
+      </Button>}
       {courses ? 
-      !this.state.courseActive ? <CourseTable courses={courses} /> : ''
+      !this.state.courseActive ? <CourseTable courses={courses} auth={auth}/>  : ''
       : <Paper  className={classes.root}>
         <div className={classes.title}>
         <Typography type="title">No Data</Typography>
@@ -109,7 +112,6 @@ const styles = theme => ({
          <CreateCourse isCourseActive={this.state.courseActive} 
          handleSubmit={this.submitCourse.bind(this)} 
          handleCancel={this.cancelSubmit.bind(this)} 
-         notification={this.handleClick({vertical: 'top', horizontal: 'right' })}
          />
           </div>) }
       </AppFrame>
@@ -129,8 +131,16 @@ const styles = theme => ({
 }
 
 const CoursesWithFirebase = compose(
-    firebaseConnect(['courses']),
-    connect(({ firebase }) => ({ auth: firebase.auth, courses: firebase.ordered.courses }))
+  firebaseConnect( (props, store) => {
+    return [
+    {
+      path:`courses`, 
+      storeAs:'myCourses', 
+      queryParams:  [ 'orderByChild=uid', `equalTo=${store.getState().firebase.auth.uid}` ]
+    }
+  ]
+  }),
+  connect(({ firebase }) => ({ auth: firebase.auth, courses: firebase.ordered['myCourses'] }))
 )(Courses)
 
  Courses.propTypes = {
