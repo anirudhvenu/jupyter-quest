@@ -45,7 +45,7 @@ const styles = theme => ({
       this.setState({[e.target.name]:e.target.value});
     }
     render(){
-      const {classes, isCourseActive, handleCancel, handleSubmit, notification}  = this.props;
+      const {classes, isCourseActive, handleCancel, handleSubmit }  = this.props;
       const { name, desc, password } = this.state;
     return(
         <div className={classes.container} >
@@ -76,9 +76,9 @@ const styles = theme => ({
                 <FormHelperText id="name-error-text">Password Required</FormHelperText>
             </div>
             <div>
-              <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, desc, password }), notification("Data saved Successfully")}} >Submit</Button>
+              <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, desc, password })}} >Submit</Button>
               <Button className="cancelBtn" 
-              raised color="default" onClick={ () => {handleCancel() ,notification("Data not saved")}}>Cancel</Button>
+              raised color="default" onClick={ () => {handleCancel() }}>Cancel</Button>
             </div>
             <div>
           </div>

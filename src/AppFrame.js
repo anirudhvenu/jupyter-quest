@@ -113,7 +113,7 @@ class AppFrame extends React.Component {
 
 
   render() {
-    const { children, classes, auth, courses, firebase } = this.props;
+    const { children, classes, auth, firebase } = this.props;
     let appSidebarClasses = `${classes.drawer} app-sidebar`;
     return (
       <div className={classes.root}>
@@ -130,10 +130,9 @@ class AppFrame extends React.Component {
                 </IconButton>
               </Hidden>
               <Typography className={classes.appBarTitle} type="title" color="inherit" noWrap>
-                Achievements
+              Achievements
               </Typography>
-              {isLoaded(auth)
-                ? isEmpty(auth)
+              {isEmpty(auth)
                   ? <Button color="contrast" className={classes.button} onClick={() => firebase.login({ provider: 'google', type: 'popup' })}>Login With Google</Button>
                   : <div>
                     <span> Welcome {auth.displayName} !</span>
@@ -147,8 +146,7 @@ class AppFrame extends React.Component {
                       <MoreVertIcon />
                     </IconButton>
                   </div>
-                : <Button color="contrast" className={classes.button} onClick={() => firebase.login({ provider: 'google', type: 'popup' })}>Login With Google</Button>}
-
+              }
               <Menu
                 id="menuRight"
                 anchorEl={this.state.dropdownAnchorEl}
@@ -181,8 +179,8 @@ AppFrame.propTypes = {
 
 //export default withStyles(styles)(AppFrame);
 const AppFrameWithFirebase = compose(
-  firebaseConnect(['courses']),
-  connect(({ firebase }) => ({ auth: firebase.auth, courses: firebase.data.courses }))
+  firebaseConnect(),
+  connect(({ firebase }) => ({ auth: firebase.auth}))
 )(AppFrame)
 
 export default withStyles(styles)(AppFrameWithFirebase);

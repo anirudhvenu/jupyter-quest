@@ -1,7 +1,7 @@
 import React from 'react'
 import {Switch,Route} from 'react-router-dom'
 import App from './components/app'
-import Courses from './containers/courses'
+import Courses from './pages/coursePage'
 import courseDetail from './components/courseDetail'
 
 const Root=()=>(
