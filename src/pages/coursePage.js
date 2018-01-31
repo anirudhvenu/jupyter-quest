@@ -21,7 +21,7 @@ import Courses from '../containers/courses';
         <div>
             {isLoaded(auth)
             ? <Courses />
-            : 'not loaded'
+            : 'Loading'
              }
         
         </div>

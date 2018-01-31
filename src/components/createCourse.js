@@ -9,7 +9,6 @@ import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import TextField from 'material-ui/TextField';
-import AppFrame from '../AppFrame'
   /**
    * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
    */
@@ -80,9 +79,7 @@ const styles = theme => ({
               <Button className="cancelBtn" 
               raised color="default" onClick={ () => {handleCancel() }}>Cancel</Button>
             </div>
-            <div>
-          </div>
-          </div>
+        </div>
   )
 }
 }

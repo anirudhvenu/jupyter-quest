@@ -22,7 +22,6 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import FilterListIcon from 'material-ui-icons/FilterList';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
 
 let counter = 0;
@@ -131,7 +130,7 @@ let EnhancedTableToolbar = props => {
         {numSelected > 0 ? (
           <Typography type="subheading">{numSelected} selected</Typography>
         ) : (
-          <Typography type="title">Courses</Typography>
+            <Typography type="title">Courses</Typography>
           )}
       </div>
       <div className={classes.spacer} />
@@ -171,14 +170,6 @@ const styles = theme => ({
   },
   tableWrapper: {
     overflowX: 'auto',
-  },
-  card: {
-    minWidth: 275,
-  },
-  superCard:{
-    width:'200px',
-    marginLeft:'auto',
-    marginRight:'auto'
   },
   bullet: {
     display: 'inline-block',
@@ -285,16 +276,6 @@ class CoursesContainer extends React.Component {
     return (
   <div className={classes.root}>
 
-{ !auth.emailVerified && <div  className={classes.superCard}>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography className={classes.title}>Restricted Content</Typography>
-          <Typography type="headline" component="h2">
-           Please Log In
-          </Typography>
-        </CardContent>
-      </Card>
-    </div> }
   { auth.emailVerified && <div>
          <AppBar position="static">
           <Tabs value={this.state.value} onChange={this.handleChange}>
