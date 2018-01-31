@@ -38,16 +38,6 @@ class CreateAssignment extends Component {
         handleInput(e){
           this.setState({[e.target.name]:e.target.value});
         }
-       
-
-    componentDidMount() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-    }
-
 
     render() {
         const {classes, isCourseActive, handleClose, handleSubmit }  = this.props;
