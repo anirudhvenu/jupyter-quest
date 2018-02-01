@@ -56,23 +56,18 @@ const styles = theme => ({
         <Link className="linkStyle" to="/courses">Courses</Link>
       </ListItem> */}
 
-        <ListItem button onClick={this.handleClick}>
+        <ListItem button>
           <ListItemIcon>
           <StarIcon />
           </ListItemIcon>
           <Link className="linkStyle" to="/courses">Courses</Link>
-          {this.state.open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse component="li" in={this.state.open} timeout="auto" unmountOnExit>
-          <List disablePadding>
-            <ListItem button className={classes.nested}>
-              <ListItemIcon>
-              <StarIcon />
-              </ListItemIcon>
-              <ListItemText inset primary="Assignment" />
-            </ListItem>
-          </List>
-        </Collapse>
+        <ListItem button>
+        <ListItemIcon>
+        <StarIcon />
+        </ListItemIcon>
+        <ListItemText primary="Paths" />
+      </ListItem>
     </List>
     <Divider />
     <List>
