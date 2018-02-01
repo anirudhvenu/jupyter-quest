@@ -11,6 +11,7 @@ import {firebaseLogger} from './helpers/'
 // firebase config
 const firebaseConfig = {
 
+
   apiKey: "AIzaSyCaXBvH4LEAO7fP7LNMMol1W8V9J8Fah8A",
   authDomain: "jupyter-dev.firebaseapp.com",
   databaseURL: "https://jupyter-dev.firebaseio.com",

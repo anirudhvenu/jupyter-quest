@@ -25,8 +25,8 @@ import { Link } from 'react-router-dom';
 
 // components
 
-import EnhancedTableHead from './table/enhancedTableHead';
-import EnhancedTableToolbar from './table/enhancedTableToolbar';
+import EnhancedTableHead from '../table/enhancedTableHead';
+import EnhancedTableToolbar from '../table/enhancedTableToolbar';
 
 let counter = 0;
 
@@ -43,7 +43,7 @@ const styles = theme => ({
   },
 });
 
-class MyCourses extends React.Component {
+class MyCourse extends React.Component {
   constructor(props, context) {
     super(props, context);
 
@@ -186,11 +186,11 @@ class MyCourses extends React.Component {
   }
 }
 
-MyCourses.propTypes = {
+MyCourse.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MyCourses);
+export const MyCourses = withStyles(styles)(MyCourse);
 
 
 

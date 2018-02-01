@@ -11,10 +11,9 @@ import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 import AppFrame from '../AppFrame'
 import CourseTable from '../components/courses';
-import CreateCourse from '../components/createCourse';
+import {CreateCourse} from '../components/courses/';
 import Paper from 'material-ui/Paper/Paper';
 import Snackbar from 'material-ui/Snackbar';
-import CoursesDetail from '../components/courseDetail'
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
@@ -61,8 +60,9 @@ const styles = theme => ({
         vertical: 'top',
         horizontal: 'right',
         message:null,
-        value: 0
-        }
+        value: 0,
+        alertMsg:true,
+      }
         this.handleInput=this.handleInput.bind(this)
     }
 
@@ -82,7 +82,7 @@ const styles = theme => ({
       this.setState({[e.target.name]:e.target.value})
     }
     createCourse=()=>{
-      this.setState({courseActive:true})
+      this.setState({courseActive:true, alertMsg:false})
     }
     cancelSubmit=()=>{
       
@@ -90,6 +90,7 @@ const styles = theme => ({
         name: '',
         desc: '',
         password: '',
+        alertMsg:true,
         courseActive:false})
     }
     submitCourse=(formData)=>{
@@ -98,7 +99,7 @@ const styles = theme => ({
         desc:formData.desc,
         pass:formData.password,
         uid:this.props.auth.uid
-      }
+      }    
       // push data to <firebase></firebase>
       this.props.firebase.push('courses', allCourses).then( data => {
         // wait for db to send response\
@@ -108,9 +109,13 @@ const styles = theme => ({
       }) ;
       
     }
+    componentWillReceiveProps(props){
+      if(!props.auth.emailVerified)
+      this.cancelSubmit()
+    }
     render(){
       const {classes, courses, auth, firebase }  = this.props;
-      const { vertical, horizontal, open, message } = this.state;
+      const { vertical, horizontal, open, message, alertMsg } = this.state;
     return(
     <div>
       <AppFrame>
@@ -127,24 +132,7 @@ const styles = theme => ({
        {auth.emailVerified && <Button raised onClick={this.createCourse}>
           Create a Course
       </Button>}
-      {courses ? 
-      !this.state.courseActive ? <CourseTable courses={courses} auth={auth}/> : ''
-      : 
-        <div className={classes.root}>
-        { auth.emailVerified && <div>
-        <AppBar position="static" className="marginTop">
-          <Tabs value={this.state.value} onChange={this.handleChange}>
-            <Tab label="My Course" />
-            <Tab label="Joined Course" />
-            <Tab label="Public Course" href="#basic-tabs" />
-          </Tabs>
-        </AppBar>
-        {this.state.value === 0 &&   <h2>Course Not Found</h2> }
-        {this.state.value === 1 &&   <h2>Course Not Found</h2> }
-        {this.state.value === 2 &&   <h2>Course Not Found</h2> }
-        </div>}
-      </div>
-    }
+      {!this.state.courseActive ? <CourseTable courses={courses} auth={auth}/> : ''}
         
 
        { this.state.courseActive && (<div>
