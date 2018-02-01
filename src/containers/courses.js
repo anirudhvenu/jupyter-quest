@@ -114,7 +114,7 @@ const styles = theme => ({
       this.cancelSubmit()
     }
     render(){
-      const {classes, courses, auth, firebase }  = this.props;
+      const {classes, courses, auth, firebase, publicCourses }  = this.props;
       const { vertical, horizontal, open, message, alertMsg } = this.state;
     return(
     <div>
@@ -132,7 +132,7 @@ const styles = theme => ({
        {auth.emailVerified && <Button raised onClick={this.createCourse}>
           Create a Course
       </Button>}
-      {!this.state.courseActive ? <CourseTable courses={courses} auth={auth}/> : ''}
+      {!this.state.courseActive ? <CourseTable courses={courses} auth={auth} publicCourses={publicCourses} /> : ''}
         
 
        { this.state.courseActive && (<div>
@@ -164,10 +164,18 @@ const CoursesWithFirebase = compose(
       path:`courses`, 
       storeAs:'myCourses', 
       queryParams:  [ 'orderByChild=uid', `equalTo=${store.getState().firebase.auth.uid}` ]
+    },
+    {
+      path:'courses',
+      storeAs: 'publicCourses'
     }
   ]
   }),
-  connect(({ firebase }) => ({ auth: firebase.auth, courses: firebase.ordered['myCourses'] }))
+  connect(({ firebase }) => ({ 
+    auth: firebase.auth, 
+    courses: firebase.ordered.myCourses, 
+    publicCourses: firebase.ordered.publicCourses 
+  }))
 )(Courses)
 
  Courses.propTypes = {

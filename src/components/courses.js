@@ -71,7 +71,7 @@ class CoursesContainer extends React.Component {
   };
 
   render() {
-    const { classes, courses, auth } = this.props;
+    const { classes, courses, auth, publicCourses } = this.props;
     const { order, orderBy, selected, rowsPerPage, page } = this.state;
     const bull = <span className={classes.bullet}>•</span>;
 
@@ -86,7 +86,7 @@ class CoursesContainer extends React.Component {
         break;
       }
       case 2: {
-        activeTab = <PublicCourses />
+        activeTab = publicCourses ? <PublicCourses columnData={columnData} data={publicCourses} />: <h2>No data</h2>;
         break;
       }
       default : {
@@ -100,7 +100,7 @@ class CoursesContainer extends React.Component {
           <Tabs value={this.state.value} onChange={this.handleChange}>
             <Tab label="My Course" />
             <Tab label="Joined Course" />
-            <Tab label="Public Course" href="#basic-tabs" />
+            <Tab label="Public Course" />
           </Tabs>
         </AppBar>
         {activeTab}
