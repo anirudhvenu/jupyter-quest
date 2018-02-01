@@ -7,9 +7,10 @@ import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
 // components
-import MyCourses from '../components/myCourses';
-import JoinedCourses from '../components/joinedCourses';
-import PublicCourses from '../components/publicCourses';
+import {
+  MyCourses,
+  JoinedCourses,
+  PublicCourses} from '../components/courses/';
 
 let counter = 0;
 function createData(name, calories, fat, carbs, protein) {

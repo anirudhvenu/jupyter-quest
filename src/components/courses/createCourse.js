@@ -28,7 +28,7 @@ const styles = theme => ({
   },
 });
 
- class createCourse extends React.Component{
+ class createCourses extends React.Component{
     constructor(prop){
       super(prop)
       this.state={
@@ -87,10 +87,10 @@ const styles = theme => ({
 const CoursesWithFirebase = compose(
   firebaseConnect(),
   connect()
-)(createCourse)
+)(createCourses)
 
-createCourse.propTypes = {
+createCourses.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(CoursesWithFirebase)
+export const CreateCourse = withStyles(styles)(CoursesWithFirebase)
