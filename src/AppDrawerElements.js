@@ -73,7 +73,15 @@ const styles = theme => ({
             </ListItem>
           </List>
         </Collapse>
+      <ListItem button>
+        <ListItemIcon>
+          <StarIcon />
+        </ListItemIcon>
+        <Link className="linkStyle"  name="Path" to="/path">Path</Link>
+      </ListItem>
+      
     </List>
+
     <Divider />
     <List>
       <ListItem button>
