@@ -25,6 +25,12 @@ const columnData = [
   { id: 'calories', numeric: true, disablePadding: false, label: 'Description' }
 ];
 
+const columnDataForEditAssignment = [
+  { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+  { id: 'calories', numeric: true, disablePadding: false, label: 'Description' },
+  { id: 'order', numeric: true, disablePadding: false, label: '<Order></Order>' }
+];
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -71,9 +77,10 @@ class CourseDetails extends React.Component {
   submitAssignment=(e)=>{
    let allAssignment={
       name:e.name,
-      desc:e.desc
+      desc:e.desc,
+      text:e.text,
+      path:e.path
     }
-    
     this.props.firebase.push(`assignment/${this.props.match.params.id}`, allAssignment).then( data => {
       // wait for db to send response\
 
@@ -106,7 +113,8 @@ class CourseDetails extends React.Component {
         break;
       }
       case 1 : {
-        activeTab = <EditAssignment create={this.createAssignment} />
+        activeTab =  assignments ? <EditAssignment create={this.createAssignment} columnData={columnDataForEditAssignment}  data={assignments} />
+        : <h2>No data</h2>;
         break;
       }
       case 2: {
