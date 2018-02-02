@@ -22,6 +22,7 @@ import DeleteIcon from 'material-ui-icons/Delete';
 import FilterListIcon from 'material-ui-icons/FilterList';
 import { Link } from 'react-router-dom';
 import JoinModel from './joinModel'
+import Snackbar from 'material-ui/Snackbar';
 
 // components
 
@@ -55,8 +56,12 @@ class PublicCourse extends React.Component {
       selected: [],
       page: 0,
       rowsPerPage: 5,
-      open: false,  
+      openModel: false, 
+      openNotification:false, 
       password:'',
+      vertical: 'top',
+      horizontal: 'right',
+      message:null,
     };
   }
 
@@ -115,6 +120,14 @@ class PublicCourse extends React.Component {
     this.setState({ selected: newSelected });
   };
 
+  openNotification = (msg) =>{
+    this.setState({ openNotification: true,message:msg });
+  };
+
+  closeNotification = () => {
+    this.setState({ openNotification: false });
+  };
+
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -127,14 +140,15 @@ class PublicCourse extends React.Component {
       console.log(e.password,"...........")
       this.handleClose();
       this.setState( ()=> { return {password:''} } )
+      this.openNotification('Functionality to be developed');
   }
 
   handleOpen = () => {
-    this.setState({ open: true });
+    this.setState({ openModel: true });
   };
 
   handleClose = (e) => {
-    this.setState({ open: false, password:'' });
+    this.setState({ openModel: false, password:'' });
   };
 
   handleInput=(e)=>{
@@ -146,7 +160,7 @@ class PublicCourse extends React.Component {
 
   render() {
     const { classes, data, columnData } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page, password } = this.state;
+    const { order, orderBy, selected, rowsPerPage, page, password, vertical,openNotification, horizontal, message } = this.state;
     const emptyRows = data ? rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage) :'';
     return (
         <div>
@@ -214,12 +228,22 @@ class PublicCourse extends React.Component {
         </div>
       </Paper>  
             <JoinModel 
-            openModel={this.state.open}
+            openModel={this.state.openModel}
             handleClose={this.handleClose}
             handleSubmit={this.submitJoin}
             password={password}
             handlePassword={this.handleInput}
             />
+
+             <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={openNotification}
+        onClose={this.closeNotification}
+        SnackbarContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">{message}</span>}
+        />
       </div>      
     );
   }

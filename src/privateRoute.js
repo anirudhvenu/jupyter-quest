@@ -1,9 +1,8 @@
 import React from 'react'
-import {Switch,Route,Redirect} from 'react-router-dom'
+import {Route,Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import {compose} from 'redux'
-import App from './components/app'
 
 
 export const PrivateRoute = ({auth, ...rest}) => (
