@@ -130,7 +130,7 @@ class AppFrame extends React.Component {
                 </IconButton>
               </Hidden>
               <Typography className={classes.appBarTitle} type="title" color="inherit" noWrap>
-              Achievements
+              Jupyter Quest
               </Typography>
               {isEmpty(auth)
                   ? <Button color="contrast" className={classes.button} onClick={() => firebase.login({ provider: 'google', type: 'popup' })}>Login With Google</Button>

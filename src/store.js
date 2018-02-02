@@ -10,12 +10,12 @@ import {firebaseLogger} from './helpers/'
 
 // firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyDFhwVmkAD_Uq-abtHserMz4mOHuR7M6cc",
-  authDomain: "react-firebase-19d1f.firebaseapp.com",
-  databaseURL: "https://react-firebase-19d1f.firebaseio.com",
-  projectId: "react-firebase-19d1f",
-  storageBucket: "react-firebase-19d1f.appspot.com",
-  messagingSenderId: "911112473910"
+  apiKey: "AIzaSyCaXBvH4LEAO7fP7LNMMol1W8V9J8Fah8A",
+  authDomain: "jupyter-dev.firebaseapp.com",
+  databaseURL: "https://jupyter-dev.firebaseio.com",
+  projectId: "jupyter-dev",
+  storageBucket: "jupyter-dev.appspot.com",
+  messagingSenderId: "700109501520"
 };
 firebase.initializeApp(firebaseConfig);
 const config = {
