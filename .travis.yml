@@ -9,13 +9,8 @@ branches:
 install:
 - npm install
 
-warnings_are_errors: false
-
 script:
 - npm run-script build
-
-before_deploy:
-- ./scripts/travis-install-functions.sh
 
 deploy:
   skip_cleanup: true
