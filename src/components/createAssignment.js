@@ -2,13 +2,16 @@ import React, {Component} from 'react'
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { FormControl, FormHelperText,FormControlLabel, FormGroup,FormLabel } from 'material-ui/Form';
+import Radio, { RadioGroup } from 'material-ui/Radio';
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import TextField from 'material-ui/TextField';
-
+import Select from 'material-ui/Select';
+import { MenuItem } from 'material-ui/Menu';
+import Input, { InputLabel } from 'material-ui/Input';
 
 const styles = theme => ({
     container: {
@@ -23,14 +26,32 @@ const styles = theme => ({
     menu: {
       width: 200,
     },
+    input: {
+      display: 'none',
+    },
+    block:{
+      display: 'inline-block',
+    },
+    formControl: {
+      margin: theme.spacing.unit,
+      minWidth: 0,
+      width:'100%',
+    },
+    selectEmpty: {
+      marginTop: theme.spacing.unit * 2,
+    },
   });
-
+let isActive
 class CreateAssignment extends Component {
     constructor(props) {
         super(props)
         this.state={
             name:'',
-            desc:''
+            desc:'',
+            value: '',
+            path: '',
+            text:'',
+            answerType:1
             }
         this.handleInput=this.handleInput.bind(this)
         }
@@ -39,14 +60,56 @@ class CreateAssignment extends Component {
           this.setState({[e.target.name]:e.target.value});
         }
 
+        handleChange = (event, value) => {
+          console.log(value,"......value")
+          this.setState({ value });
+          if(value=='Notebook'){
+            this.setState({answerType:2});
+          } else{
+            this.setState({answerType:1});
+          }
+        };
+
+      
+
+        // fileLoader=()=>{
+        //   let file = document.getElementById('raised-button-file').value
+        //  let fileExt= file.split('.').pop()
+        //  if(fileExt=='json')
+        //   console.log(fileExt," fileExt matched.........")
+        //   else
+        //   console.log("fileExt no match")
+        // }
+
     render() {
         const {classes, isCourseActive, handleClose, handleSubmit }  = this.props;
-      const { name, desc, password } = this.state;
+        const { name, desc, path, text, isSelectActive, answerType } = this.state;
+        if(answerType===1)
+        isActive=true
+        else
+        isActive=false
+
         return (
             <div className={classes.container} >
             <h2>CREATE ASSIGNMENT</h2>
-            <br /><br />
-            Enter Name
+            <br />
+            <div className={classes.root}>
+        <FormControl component="fieldset" required error>
+          <FormLabel component="legend">Type of Question</FormLabel>
+          <RadioGroup
+            aria-label="question"
+            name="question1"
+            value={this.state.value}
+            onChange={this.handleChange}
+            className={classes.block}
+          >
+            <FormControlLabel value="Short Answer" control={<Radio checked={answerType === 1} />} label="Short Answer"  />
+            <FormControlLabel value="Notebook" control={<Radio checked={answerType === 2} />} label="Notebook" />
+          </RadioGroup>
+        </FormControl>
+      </div>
+            <br />
+             Name
             <div>
               <TextField 
                   className={classes.textField}
@@ -54,7 +117,7 @@ class CreateAssignment extends Component {
                 onChange={this.handleInput}/><br />
                 <FormHelperText id="name-error-text">Name Required</FormHelperText>
             </div>
-              Description
+              Details/Links
             <div>
               <TextField
                   className={classes.textField}
@@ -62,12 +125,48 @@ class CreateAssignment extends Component {
               onChange={this.handleInput}/>
               <FormHelperText id="name-error-text">Description Required</FormHelperText>
             </div>
+           {isActive && <div>
+              Text Field
             <div>
-              <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, desc })}} >Submit</Button>
+              <TextField
+                  className={classes.textField}
+               name="text" value={this.state.text}
+              onChange={this.handleInput}/>
+              <FormHelperText id="name-error-text">Text Required</FormHelperText>
+            </div>
+            </div>}
+         { !isActive && <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="age-simple">Choose Path</InputLabel>
+            <Select
+            value={this.state.path}
+            onChange={this.handleInput}
+            input={<Input name="path" id="path" />}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value="Item 2">Item 2</MenuItem>
+            <MenuItem value="Item 1">Item 1</MenuItem>
+            <MenuItem value="Item 3">Item 3</MenuItem>
+          </Select>
+          <FormHelperText>Path Required</FormHelperText>
+           </FormControl> }
+            <div>
+            {/* <input
+              accept=".json"
+              className={classes.input}
+              id="raised-button-file"
+              multiple
+              type="file"
+            />
+             <br />
+            <label style={{marginRight:'10px'}} htmlFor="raised-button-file">
+              <Button raised component="span" color="default" className={classes.button}> Upload File </Button>
+            </label> */}
+              <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, desc, path, text })}} >Submit</Button>
               <Button className="cancelBtn" 
               raised color="default" onClick={()=>handleClose()}>Cancel</Button>
             </div>
-           
         </div>
         )
     }

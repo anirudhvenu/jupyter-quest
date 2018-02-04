@@ -1,33 +1,20 @@
 import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty, pathToJS } from 'react-redux-firebase'
-import PropTypes from 'prop-types'
+import { firebaseConnect, isLoaded } from 'react-redux-firebase'
 
 import Courses from '../containers/courses';
   /**
    * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
    */
-
-
- class CoursePage extends React.Component{
-    constructor(prop){
-      super(prop)
+const CoursePage = ({auth}) => (
+  <div>
+    {isLoaded(auth)
+      ? <Courses />
+      : 'Loading'
     }
-
-    render(){
-      const {classes, courses, auth, firebase }  = this.props;
-    return(
-        <div>
-            {isLoaded(auth)
-            ? <Courses />
-            : 'Loading'
-             }
-        
-        </div>
-  )
-}
-}
+  </div>
+)
 
 const CoursesWithFirebase = compose(
   firebaseConnect(),

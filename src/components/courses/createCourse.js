@@ -76,8 +76,7 @@ const styles = theme => ({
             </div>
             <div>
               <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, desc, password })}} >Submit</Button>
-              <Button className="cancelBtn" 
-              raised color="default" onClick={ () => {handleCancel() }}>Cancel</Button>
+              <Button className="cancelBtn" raised color="default" onClick={ () => {handleCancel() }}>Cancel</Button>
             </div>
         </div>
   )

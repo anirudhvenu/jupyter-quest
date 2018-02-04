@@ -43,25 +43,22 @@ const styles = theme => ({
   <div>
     <Divider />
     <List>
+    <Link className="linkStyle" to="/">
       <ListItem button>
         <ListItemIcon>
           <StarIcon />
         </ListItemIcon>
-        <Link className="linkStyle" to="/">Home</Link>
+        <ListItemText primary="Home" />
       </ListItem>
-      {/* <ListItem button>
-        <ListItemIcon>
-          <StarIcon />
-        </ListItemIcon>
-        <Link className="linkStyle" to="/courses">Courses</Link>
-      </ListItem> */}
-
+      </Link>
+       <Link className="linkStyle" to="/courses">
         <ListItem button>
           <ListItemIcon>
           <StarIcon />
           </ListItemIcon>
-          <Link className="linkStyle" to="/courses">Courses</Link>
+          <ListItemText primary="Courses" />
         </ListItem>
+        </Link>
         <ListItem button>
         <ListItemIcon>
         <StarIcon />
