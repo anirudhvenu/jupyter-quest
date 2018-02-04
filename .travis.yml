@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+ - "8"
+
+branches:
+ only:
+  - master
+
+install:
+- npm install
+
+script:
+- npm run-script build
+
+before_deploy:
+- ./scripts/travis-install-functions.sh
+
+deploy:
+  skip_cleanup: true
+  provider: firebase
+  token:
+    secure: "$FIREBASE_SECRET"
+  project: "jupyter-dev"
