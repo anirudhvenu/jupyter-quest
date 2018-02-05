@@ -1,4 +1,5 @@
-import { applyMiddleware, createStore, compose } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import logger from 'redux-logger';
 import { reactReduxFirebase } from 'react-redux-firebase';
 import * as firebase from 'firebase';
@@ -24,7 +25,7 @@ const config = {
   attachAuthIsReady: true,
 }
 
-const createStoreWithFirebase = compose(
+const createStoreWithFirebase = composeWithDevTools(
   reactReduxFirebase(firebase, config),
 )(createStore)
 
