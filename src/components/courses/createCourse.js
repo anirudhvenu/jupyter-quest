@@ -1,94 +1,92 @@
-
-import React from 'react'
-import Button from 'material-ui/Button';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
+import Modal from 'material-ui/Modal';
+import Button from 'material-ui/Button';
 import { FormHelperText } from 'material-ui/Form';
-import { firebaseConnect} from 'react-redux-firebase'
-import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
 import TextField from 'material-ui/TextField';
-  /**
-   * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
-   */
+
+function getModalStyle() {
+  const top = '50';
+  const left = '50';
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const styles = theme => ({
-  container: {
-    display: 'inline-block',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 400,
-  },
-  menu: {
-    width: 200,
+  paper: {
+    position: 'absolute',
+    width: theme.spacing.unit * 50,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing.unit * 4,
   },
 });
 
- class createCourses extends React.Component{
-    constructor(prop){
-      super(prop)
-      this.state={
-        name:'',
-        desc:'',
-        password:'',
-        courseActive:false,
-        }
-        this.handleInput=this.handleInput.bind(this)
-    }
+class SimpleModal extends React.Component {
+    constructor(props){
+        super(props)
+  this.state = {
+    password: '',
+    name:''
+  };
+}
 
-    handleInput(e){
-      this.setState({[e.target.name]:e.target.value});
-    }
-    render(){
-      const {classes, handleCancel, handleSubmit }  = this.props;
-      const { name, desc, password } = this.state;
-    return(
-        <div className={classes.container} >
-            <h2>CREATE COURSE</h2>
-            <br /><br />
-            Enter Name
+  render() {
+    const { classes, openModel, handleClose, handleSubmit, name, password, handleInput } = this.props;
+    return (
+      <div>
+        <Modal
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+          open={openModel}
+          onClose={()=>handleClose()}
+        >
+          <div style={getModalStyle()} className={classes.paper}>
+            <Typography type="title" id="modal-title">
+            <div className={classes.container} >
+            <h2>Create Course</h2>
+
+            Name
             <div>
-              <TextField 
-                  className={classes.textField}
-               name="name" value={this.state.name}
-                onChange={this.handleInput}/><br />
-                <FormHelperText id="name-error-text">Name Required</FormHelperText>
-            </div>
-              Description
-            <div>
-              <TextField
-                  className={classes.textField}
-               name="desc" value={this.state.desc}
-              onChange={this.handleInput}/>
-              <FormHelperText id="name-error-text">Description Required</FormHelperText>
+                <TextField type="text"
+                    className={classes.textField}
+                    name="name" value={name}
+                    required='true'
+                    onChange={(e) => {handleInput(e)}}/>
+                <FormHelperText id="name-error-text">Password Required</FormHelperText>
             </div>
               Password
             <div>
                 <TextField type="password"
                     className={classes.textField}
-                    name="password" value={this.state.password}
-                    onChange={this.handleInput}/>
+                    name="password" value={password}
+                    required='true'
+                    onChange={(e) => {handleInput(e)}}/>
                 <FormHelperText id="name-error-text">Password Required</FormHelperText>
             </div>
-            <div>
-              <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, desc, password })}} >Submit</Button>
-              <Button className="cancelBtn" raised color="default" onClick={ () => {handleCancel() }}>Cancel</Button>
-            </div>
         </div>
-  )
-}
+            </Typography>
+            <Typography type="subheading" id="simple-modal-description">
+            <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, password })}} >Submit</Button>
+              <Button className="cancelBtn" 
+              raised color="default" onClick={ () => {handleClose() }}>Cancel</Button>
+            </Typography>
+          </div>
+        </Modal>
+      </div>
+    );
+  }
 }
 
-const CoursesWithFirebase = compose(
-  firebaseConnect(),
-  connect()
-)(createCourses)
-
-createCourses.propTypes = {
+SimpleModal.propTypes = {
   classes: PropTypes.object.isRequired,
-}
+};
 
-export const CreateCourse = withStyles(styles)(CoursesWithFirebase)
+// We need an intermediary variable for handling the recursive nesting.
+export const CreateCourse = withStyles(styles)(SimpleModal);
