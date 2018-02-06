@@ -11,10 +11,9 @@ import Table, {
 } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import FilterListIcon from 'material-ui-icons/FilterList';
-import { Link } from 'react-router-dom';
+import Switch from 'material-ui/Switch';
+import Snackbar from 'material-ui/Snackbar';
+import SwapVertIcon from 'material-ui-icons/SwapVert';
 
 
 
@@ -24,7 +23,6 @@ import EnhancedTableHead from '../table/enhancedTableHead';
 import EnhancedTableToolbar from '../table/enhancedTableToolbar';
 import Button from 'material-ui/Button/Button';
 
-let counter = 0;
 
 const styles = theme => ({
   root: {
@@ -36,6 +34,9 @@ const styles = theme => ({
   },
   tableWrapper: {
     overflowX: 'auto',
+  },
+  paddingLt:{
+    paddingLeft:'47px'
   },
 });
 
@@ -49,6 +50,12 @@ class EditAssignments extends React.Component {
       selected: [],
       page: 0,
       rowsPerPage: 5,
+      checkedA: true,
+      open: false,
+      vertical: 'top',
+      horizontal: 'right',
+      message:null,
+      data:this.props.data
     };
   }
 
@@ -70,7 +77,7 @@ class EditAssignments extends React.Component {
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.id) });
+      this.setState({ selected: this.state.data.map(n => n.key) });
       return;
     }
     this.setState({ selected: [] });
@@ -80,6 +87,14 @@ class EditAssignments extends React.Component {
     if (keycode(event) === 'space') {
       this.handleClick(event, id);
     }
+  };
+
+ handleNotification = (msg) =>{
+    this.setState({ open: true,message:msg });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
   };
 
   handleClick = (event, id) => {
@@ -111,83 +126,134 @@ class EditAssignments extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
+  handleChange = name => (event, checked) => {
+    this.setState({ [name]: checked });
+  };
+
+  deleteData=()=>{
+    const {firebase, uid} = this.props;
+    let selectedData = this.state.selected;
+    // remove assignment from db.
+    selectedData.forEach( assignmentId => {
+      firebase.remove(`assignment/${uid}/${assignmentId}/`)
+      .then( id => this.handleNotification("Delete Assignment Successfully"))
+      .catch( err => this.handleNotification("Found Error"))
+    } )
+    this.setState({selected:[]})
+  }
+
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, data, columnData, create } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { classes, data, columnData, create, showTable } = this.props;
+    const { order, orderBy, selected, rowsPerPage, page, vertical, horizontal, open, message, } = this.state;
     const emptyRows = data ? rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage):'';
 
     return (
-      <Paper className={classes.root}>
-      <Button style={{marginLeft:'10px'}} raised color="primary" onClick={ () => create()}>Add assignment</Button>
-        <EnhancedTableToolbar title='Assignments'  numSelected={selected.length} />
-        <div className={classes.tableWrapper}>
-          <Table className={classes.table}>
-            <EnhancedTableHead
-              columnData={columnData}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
-            />
-            <TableBody>
-            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,id) => {
-              const isSelected = this.isSelected(id);
-              return (
-                <TableRow
-                  hover
-                  onClick={event => this.handleClick(event, id)}
-                  role="checkbox"
-                  aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={id}
-                  selected={isSelected}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox checked={isSelected} />
-                  </TableCell>
-                  <TableCell padding="none">{n.value.name}</TableCell>
-                  <TableCell numeric>{n.value.desc}</TableCell>
-                   <TableCell numeric>{n.value.desc}</TableCell>
+        <div>
+      <Button style={{marginLeft:'10px', marginBottom:'10px'}} raised color="primary" onClick={ () => create()}>Add assignment</Button>
+      {showTable && <Paper className={classes.root}>
+            <EnhancedTableToolbar title='Assignments'  numSelected={selected.length} deleteOpr={this.deleteData} />
+            {data ? <div className={classes.tableWrapper}>
+            <Table className={classes.table}>
+                <EnhancedTableHead
+                columnData={columnData}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={this.handleSelectAllClick}
+                onRequestSort={this.handleRequestSort}
+                rowCount={data.length}
+                />
+                <TableBody>
+                {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,id) => {
+                const isSelected = this.isSelected(n.key);
+                return (
+                    <TableRow
+                    hover
+                    onClick={event => this.handleClick(event, n.key)}
+                    role="checkbox"
+                    aria-checked={isSelected}
+                    tabIndex={-1}
+                    key={n.key}
+                    selected={isSelected}
+                    >
+                    <TableCell padding="checkbox">
+                        <Checkbox checked={isSelected} />
+                    </TableCell>
+                    <TableCell padding="none">{n.value.name}</TableCell>
+                    <TableCell numeric>
+                    <Switch
+                       // checked={this.state.checkedA}
+                        onChange={this.handleChange('checkedA')}
+                        aria-label="checkedA"
+                        />
+                    </TableCell>
+                    <TableCell numeric>
+                    <Switch
+                       // checked={this.state.checkedB}
+                        onChange={this.handleChange('checkedB')}
+                        aria-label="checkedB"
+                        />
+                    </TableCell>
+                    <TableCell className={classes.paddingLt}>22/12/2017</TableCell>
+                    <TableCell className={classes.paddingLt}>5:45 AM</TableCell>
+                    <TableCell className={classes.paddingLt}>02/01/2018</TableCell>
+                    <TableCell className={classes.paddingLt}>2:05 PM</TableCell>
+                    <TableCell className={classes.paddingLt}>Not Available</TableCell>
+                    <TableCell className={classes.paddingLt}><SwapVertIcon /></TableCell>
+                   
+                    </TableRow>
+                );
+                })}
+                {emptyRows > 0 && (
+                <TableRow style={{ height: 49 * emptyRows }}>
+                    <TableCell colSpan={6} />
                 </TableRow>
-              );
-            })}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 49 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                colSpan={6}
-                count={data.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                backIconButtonProps={{
-                  'aria-label': 'Previous Page',
-                }}
-                nextIconButtonProps={{
-                  'aria-label': 'Next Page',
-                }}
-                onChangePage={this.handleChangePage}
-                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-        </div>
-      </Paper>
+                )}
+            </TableBody>
+            <TableFooter>
+                <TableRow>
+                <TablePagination
+                    colSpan={6}
+                    count={data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    backIconButtonProps={{
+                    'aria-label': 'Previous Page',
+                    }}
+                    nextIconButtonProps={{
+                    'aria-label': 'Next Page',
+                    }}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
+                </TableRow>
+            </TableFooter>
+            </Table>
+            </div> :''}
+                </Paper> }
+
+        <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={this.handleClose}
+        SnackbarContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">{message}</span>}
+        />  
+      </div>
     );
   }
 }
 
 EditAssignments.propTypes = {
   classes: PropTypes.object.isRequired,
+  data: PropTypes.array,
+  columnData:PropTypes.array.isRequired,
+  create:PropTypes.func.isRequired,
+  showTable:PropTypes.bool.isRequired
 };
 
 export const EditAssignment = withStyles(styles)(EditAssignments);

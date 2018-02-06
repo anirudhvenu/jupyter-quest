@@ -1,22 +1,16 @@
 import React from 'react'
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 import AppFrame from '../AppFrame'
 import CourseTable from '../components/courses';
 import {CreateCourse} from '../components/courses/';
-import Paper from 'material-ui/Paper/Paper';
 import Snackbar from 'material-ui/Snackbar';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Card, { CardContent } from 'material-ui/Card';
   /**
    * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
    */
@@ -115,7 +109,7 @@ const styles = theme => ({
     }
     render(){
       const {classes, courses, auth, firebase, publicCourses }  = this.props;
-      const { vertical, horizontal, open, message, alertMsg } = this.state;
+      const { vertical, horizontal, open, message } = this.state;
     return(
     <div>
       <AppFrame>
@@ -132,7 +126,7 @@ const styles = theme => ({
        {auth.emailVerified && <Button raised onClick={this.createCourse}>
           Create a Course
       </Button>}
-      {!this.state.courseActive ? <CourseTable courses={courses} auth={auth} publicCourses={publicCourses} /> : ''}
+      {!this.state.courseActive ? <CourseTable firebase={firebase} courses={courses} auth={auth} publicCourses={publicCourses} /> : ''}
         
 
        { this.state.courseActive && (<div>
@@ -180,6 +174,9 @@ const CoursesWithFirebase = compose(
 
  Courses.propTypes = {
   classes: PropTypes.object.isRequired,
+  courses: PropTypes.array,
+  auth: PropTypes.object.isRequired,
+  publicCourses: PropTypes.array
 }
 
 export default withStyles(styles)(CoursesWithFirebase)

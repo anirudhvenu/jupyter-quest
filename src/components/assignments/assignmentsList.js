@@ -11,10 +11,6 @@ import Table, {
 } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import FilterListIcon from 'material-ui-icons/FilterList';
-import { Link } from 'react-router-dom';
 
 
 
@@ -22,8 +18,6 @@ import { Link } from 'react-router-dom';
 
 import EnhancedTableHead from '../table/enhancedTableHead';
 import EnhancedTableToolbar from '../table/enhancedTableToolbar';
-
-let counter = 0;
 
 const styles = theme => ({
   root: {
@@ -48,6 +42,8 @@ class AssignmentLists extends React.Component {
       selected: [],
       page: 0,
       rowsPerPage: 5,
+      message:null,
+      open:false
     };
   }
 
@@ -114,7 +110,7 @@ class AssignmentLists extends React.Component {
 
   render() {
     const { classes, data, columnData } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { order, orderBy, selected, rowsPerPage, page, message, open } = this.state;
     const emptyRows = data ? rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage):'';
 
     return (
@@ -123,6 +119,7 @@ class AssignmentLists extends React.Component {
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <EnhancedTableHead
+              isCheckbox='true'
               columnData={columnData}
               numSelected={selected.length}
               order={order}
@@ -133,19 +130,12 @@ class AssignmentLists extends React.Component {
             />
             <TableBody>
             {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,id) => {
-              const isSelected = this.isSelected(id);
+              const isSelected = this.isSelected(n.key);
               return (
                 <TableRow
-                  hover
-                  onClick={event => this.handleClick(event, id)}
-                  role="checkbox"
-                  aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={id}
-                  selected={isSelected}
+                  key={n.key}
                 >
                   <TableCell padding="checkbox">
-                    <Checkbox checked={isSelected} />
                   </TableCell>
                   <TableCell padding="none">{n.value.name}</TableCell>
                   <TableCell numeric>{n.value.desc}</TableCell>
@@ -185,6 +175,8 @@ class AssignmentLists extends React.Component {
 
 AssignmentLists.propTypes = {
   classes: PropTypes.object.isRequired,
+  data: PropTypes.array.isRequired,
+  columnData:PropTypes.array.isRequired
 };
 
 export const AssignmentList = withStyles(styles)(AssignmentLists);
