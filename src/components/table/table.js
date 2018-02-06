@@ -188,6 +188,8 @@ class MyCourses extends React.Component {
 
 MyCourses.propTypes = {
   classes: PropTypes.object.isRequired,
+  data: PropTypes.object.isReqired,
+  columnData: propTypes.object.isRequired
 };
 
 export default withStyles(styles)(MyCourses);

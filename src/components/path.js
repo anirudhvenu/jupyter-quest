@@ -13,7 +13,7 @@ import Table, {
 } from 'material-ui/Table';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
@@ -22,18 +22,11 @@ import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import DeleteIcon from 'material-ui-icons/Delete';
 import FilterListIcon from 'material-ui-icons/FilterList';
-import { lighten } from 'material-ui/styles/colorManipulator';
 import Snackbar from 'material-ui/Snackbar';
-import Tabs, { Tab } from 'material-ui/Tabs';
 import Button from 'material-ui/Button';
 import CreateAssignment from './createAssignment'
 import AppFrame from '../AppFrame'
 
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-  counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
-}
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
@@ -268,7 +261,7 @@ class Path extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, assignment, auth } = this.props;
+    const { classes, assignment } = this.props;
     const { order, orderBy, selected, rowsPerPage, page, vertical, horizontal, open, message  } = this.state;
     const emptyRows =  assignment ? rowsPerPage - Math.min(rowsPerPage, assignment.length - page * rowsPerPage) :'';
 
@@ -368,6 +361,7 @@ const PathWithFirebase = compose(
 
 Path.propTypes = {
   classes: PropTypes.object.isRequired,
+  assignment: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(PathWithFirebase);

@@ -13,7 +13,7 @@ import MenuIcon from 'material-ui-icons/Menu'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 
 // firebase
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect, isEmpty } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import Button from 'material-ui/Button/Button';

@@ -1,10 +1,9 @@
 
 import React from 'react'
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { FormHelperText } from 'material-ui/Form';
+import { firebaseConnect} from 'react-redux-firebase'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
@@ -44,7 +43,7 @@ const styles = theme => ({
       this.setState({[e.target.name]:e.target.value});
     }
     render(){
-      const {classes, isCourseActive, handleCancel, handleSubmit }  = this.props;
+      const {classes, handleCancel, handleSubmit }  = this.props;
       const { name, desc, password } = this.state;
     return(
         <div className={classes.container} >

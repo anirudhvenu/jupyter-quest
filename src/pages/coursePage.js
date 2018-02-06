@@ -2,6 +2,7 @@ import React from 'react'
 import {compose} from 'redux'
 import {connect} from 'react-redux'
 import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import PropTypes from 'prop-types'
 
 import Courses from '../containers/courses';
   /**
@@ -21,5 +22,8 @@ const CoursesWithFirebase = compose(
   connect(({ firebase }) => ({ auth: firebase.auth}))
 )(CoursePage)
 
+CoursePage.propTypes={
+  auth: PropTypes.object.isRequired
+}
 
 export default CoursesWithFirebase
