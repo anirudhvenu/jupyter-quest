@@ -113,7 +113,7 @@ class AppFrame extends React.Component {
 
 
   render() {
-    const { children, classes, auth, firebase } = this.props;
+    const { children, classes, auth, firebase, pageTitle } = this.props;
     let appSidebarClasses = `${classes.drawer} app-sidebar`;
     return (
       <div className={classes.root}>
@@ -130,7 +130,7 @@ class AppFrame extends React.Component {
                 </IconButton>
               </Hidden>
               <Typography className={classes.appBarTitle} type="title" color="inherit" noWrap>
-              Jupyter Quest
+              {pageTitle}
               </Typography>
               {isEmpty(auth)
                   ? <Button color="contrast" className={classes.button} onClick={() => firebase.login({ provider: 'google', type: 'popup' })}>Login With Google</Button>

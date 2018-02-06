@@ -9,7 +9,7 @@ import Typography from 'material-ui/Typography';
 import AppFrame from '../AppFrame'
 import CourseTable from '../components/courses';
 import {CreateCourse} from '../components/courses/';
-import Snackbar from 'material-ui/Snackbar';
+import Notification from '../components/notification';
 import Card, { CardContent } from 'material-ui/Card';
   /**
    * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
@@ -51,8 +51,6 @@ const styles = theme => ({
         name:'',
         desc:'',
         open: false,
-        vertical: 'top',
-        horizontal: 'right',
         message:null,
         value: 0,
         alertMsg:true,
@@ -68,7 +66,7 @@ const styles = theme => ({
       this.setState({ open: true,message:msg });
     };
   
-    handleClose = () => {
+    closeNotification = () => {
       this.setState({ open: false });
     };
 
@@ -98,7 +96,7 @@ const styles = theme => ({
       this.props.firebase.push('courses', allCourses).then( data => {
         // wait for db to send response\
 
-        this.handleNotification('Data Save Successfully');
+        this.handleNotification('Course Created Successfully');
         this.cancelSubmit();
       }) ;
       
@@ -109,10 +107,11 @@ const styles = theme => ({
     }
     render(){
       const {classes, courses, auth, firebase, publicCourses }  = this.props;
-      const { vertical, horizontal, open, message } = this.state;
+      const { open, message } = this.state;
     return(
     <div>
-      <AppFrame>
+       <Notification message={message} open={open} handleClose={this.closeNotification}/>
+      <AppFrame pageTitle="Courses" >
       { !auth.emailVerified && <div  className={classes.superCard}>
       <Card className={classes.card}>
         <CardContent>
@@ -136,16 +135,6 @@ const styles = theme => ({
          />
           </div>) }
       </AppFrame>
-
-      <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={this.handleClose}
-          SnackbarContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{message}</span>}
-        />
     </div>
   )
 }

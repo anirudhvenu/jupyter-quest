@@ -9,7 +9,6 @@ import Table, {
   TableRow,
 } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
 import { Link } from 'react-router-dom';
 import JoinModel from './joinModel'
 import Snackbar from 'material-ui/Snackbar';
@@ -125,7 +124,6 @@ class PublicCourse extends React.Component {
   };
 
   submitJoin=(e)=>{
-      console.log(e.password,"...........")
       this.handleClose();
       this.setState( ()=> { return {password:''} } )
       this.openNotification('Functionality to be developed');
@@ -168,7 +166,6 @@ class PublicCourse extends React.Component {
             />
             <TableBody>
             {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((course,id) => {
-                  const isSelected = this.isSelected(id);
                 return (
                     <TableRow
                       key={id}

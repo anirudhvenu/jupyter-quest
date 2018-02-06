@@ -12,7 +12,6 @@ import Table, {
 import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
 import Switch from 'material-ui/Switch';
-import Snackbar from 'material-ui/Snackbar';
 import SwapVertIcon from 'material-ui-icons/SwapVert';
 
 
@@ -22,6 +21,7 @@ import SwapVertIcon from 'material-ui-icons/SwapVert';
 import EnhancedTableHead from '../table/enhancedTableHead';
 import EnhancedTableToolbar from '../table/enhancedTableToolbar';
 import Button from 'material-ui/Button/Button';
+import Notification from '../notification'
 
 
 const styles = theme => ({
@@ -52,10 +52,7 @@ class EditAssignments extends React.Component {
       rowsPerPage: 5,
       checkedA: true,
       open: false,
-      vertical: 'top',
-      horizontal: 'right',
       message:null,
-      data:this.props.data
     };
   }
 
@@ -69,15 +66,15 @@ class EditAssignments extends React.Component {
 
     const data =
       order === 'desc'
-        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
-        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+        ? this.props.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
+        : this.props.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 
     this.setState({ data, order, orderBy });
   };
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.key) });
+      this.setState({ selected: this.props.data.map(n => n.key) });
       return;
     }
     this.setState({ selected: [] });
@@ -93,7 +90,7 @@ class EditAssignments extends React.Component {
     this.setState({ open: true,message:msg });
   };
 
-  handleClose = () => {
+  closeNotification = () => {
     this.setState({ open: false });
   };
 
@@ -146,11 +143,12 @@ class EditAssignments extends React.Component {
 
   render() {
     const { classes, data, columnData, create, showTable } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page, vertical, horizontal, open, message, } = this.state;
+    const { order, orderBy, selected, rowsPerPage, page, open, message } = this.state;
     const emptyRows = data ? rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage):'';
 
     return (
         <div>
+      <Notification message={message} open={open} handleClose={this.closeNotification}/>
       <Button style={{marginLeft:'10px', marginBottom:'10px'}} raised color="primary" onClick={ () => create()}>Add assignment</Button>
       {showTable && <Paper className={classes.root}>
             <EnhancedTableToolbar title='Assignments'  numSelected={selected.length} deleteOpr={this.deleteData} />
@@ -233,16 +231,7 @@ class EditAssignments extends React.Component {
             </Table>
             </div> :''}
                 </Paper> }
-
-        <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
-        onClose={this.handleClose}
-        SnackbarContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id="message-id">{message}</span>}
-        />  
+       
       </div>
     );
   }

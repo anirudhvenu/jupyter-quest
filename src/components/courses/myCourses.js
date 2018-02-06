@@ -44,8 +44,7 @@ class MyCourse extends React.Component {
       page: 0,
       rowsPerPage: 5,
       message:null,
-      open:false,
-      data:this.props.data
+      open:false
     };
   }
 
@@ -59,15 +58,15 @@ class MyCourse extends React.Component {
 
     const data =
       order === 'desc'
-        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
-        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+        ? this.props.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
+        : this.props.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 
     this.setState({ data, order, orderBy });
   };
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.key) });
+      this.setState({ selected: this.props.data.map(n => n.key) });
       return;
     }
     this.setState({ selected: [] });

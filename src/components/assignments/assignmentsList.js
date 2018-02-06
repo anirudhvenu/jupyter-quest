@@ -10,7 +10,6 @@ import Table, {
   TableRow,
 } from 'material-ui/Table';
 import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
 
 
 
@@ -110,7 +109,7 @@ class AssignmentLists extends React.Component {
 
   render() {
     const { classes, data, columnData } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page, message, open } = this.state;
+    const { order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = data ? rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage):'';
 
     return (
@@ -130,7 +129,6 @@ class AssignmentLists extends React.Component {
             />
             <TableBody>
             {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n,id) => {
-              const isSelected = this.isSelected(n.key);
               return (
                 <TableRow
                   key={n.key}

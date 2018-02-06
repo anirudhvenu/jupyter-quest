@@ -5,11 +5,11 @@ import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 import Paper from 'material-ui/Paper';
-import Snackbar from 'material-ui/Snackbar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
 // components
 import CreateAssignment from '../createAssignment'
+import Notification from '../notification'
 import AppFrame from '../../AppFrame'
 import {
   AssignmentList, 
@@ -60,8 +60,6 @@ class CourseDetails extends React.Component {
       isAsgmtActive:false,
       showTable:true,
       open: false,
-      vertical: 'top',
-      horizontal: 'right',
       message:null,
       value: 0
     };
@@ -73,7 +71,7 @@ class CourseDetails extends React.Component {
   handleNotification = (msg) =>{
     this.setState({ open: true,message:msg });
   };
-  handleClose = () => {
+  closeNotification = () => {
     this.setState({ open: false });
   };
   submitAssignment=(e)=>{
@@ -107,7 +105,7 @@ class CourseDetails extends React.Component {
     const { classes, assignment, auth, match } = this.props;
     // get the array of assignments
     let assignments = assignment ? assignment[match.params.id] : [];
-    const { vertical, horizontal, open, message, showTable  } = this.state;
+    const { open, message, showTable  } = this.state;
 
     let activeTab = <h2>No Data</h2>;
     switch (this.state.value) {
@@ -133,7 +131,7 @@ class CourseDetails extends React.Component {
 
     return (
       <div>
-        <AppFrame>
+        <AppFrame pageTitle="Assignments" >
           {auth.emailVerified 
           ?
             <Paper className={classes.root}>
@@ -160,15 +158,7 @@ class CourseDetails extends React.Component {
           /> }
         </AppFrame>
      
-        <Snackbar
-        anchorOrigin={{ vertical, horizontal }}
-        open={open}
-        onClose={this.handleClose}
-        SnackbarContentProps={{
-          'aria-describedby': 'message-id',
-        }}
-        message={<span id="message-id">{message}</span>}
-        />
+        <Notification message={message} open={open} handleClose={this.closeNotification}/>
       </div>
     );
   }
