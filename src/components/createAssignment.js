@@ -77,7 +77,7 @@ class CreateAssignment extends Component {
         // }
 
     render() {
-        const {classes, handleClose, handleSubmit }  = this.props;
+        const {classes, handleClose, handleSubmit,nameRequired,descRequired,textRequired,pathRequired}  = this.props;
         const { name, desc, path, text, answerType } = this.state;
         if(answerType===1)
         isActive=true
@@ -110,7 +110,7 @@ class CreateAssignment extends Component {
                   className={classes.textField}
                name="name" value={this.state.name}
                 onChange={this.handleInput}/><br />
-                <FormHelperText id="name-error-text">Name Required</FormHelperText>
+         { nameRequired && <FormHelperText className="error-text">Name Required</FormHelperText>}
             </div>
               Details/Links
             <div>
@@ -118,7 +118,7 @@ class CreateAssignment extends Component {
                   className={classes.textField}
                name="desc" value={this.state.desc}
               onChange={this.handleInput}/>
-              <FormHelperText id="name-error-text">Description Required</FormHelperText>
+         { descRequired && <FormHelperText className="error-text">Description Required</FormHelperText>}
             </div>
            {isActive && <div>
               Text
@@ -127,7 +127,7 @@ class CreateAssignment extends Component {
                   className={classes.textField}
                name="text" value={this.state.text}
               onChange={this.handleInput}/>
-              <FormHelperText id="name-error-text">Text Required</FormHelperText>
+         { textRequired && <FormHelperText className="error-text">Text Required</FormHelperText>}
             </div>
             </div>}
          { !isActive && <FormControl className={classes.formControl}>
@@ -144,7 +144,7 @@ class CreateAssignment extends Component {
             <MenuItem value="Item 1">Item 1</MenuItem>
             <MenuItem value="Item 3">Item 3</MenuItem>
           </Select>
-          <FormHelperText>Path Required</FormHelperText>
+        { pathRequired && <FormHelperText className="error-text">Path Required</FormHelperText>}
            </FormControl> }
             <div>
             <input

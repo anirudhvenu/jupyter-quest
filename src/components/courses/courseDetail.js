@@ -61,6 +61,10 @@ class CourseDetails extends React.Component {
       showTable:true,
       open: false,
       message:null,
+      nameRequired: false,
+      descRequired: false,
+      textRequired: false,
+      pathRequired: false,
       value: 0
     };
   }
@@ -74,13 +78,23 @@ class CourseDetails extends React.Component {
   closeNotification = () => {
     this.setState({ open: false });
   };
-  submitAssignment=(e)=>{
+  submitAssignment=(formData)=>{
    let allAssignment={
-      name:e.name,
-      desc:e.desc,
-      text:e.text,
-      path:e.path
+      name:formData.name,
+      desc:formData.desc,
+      text:formData.text,
+      path:formData.path
     }
+
+    if(formData.name === '' && formData.desc!=='' )
+    this.setState({nameRequired:true, descRequired:false})
+    if(formData.name !== '' && formData.desc==='' )
+    this.setState({nameRequired:false, descRequired:true})
+    if(formData.name === '' && formData.desc==='')
+    this.setState({nameRequired:true, descRequired:true})
+    if(formData.name !== '' && formData.desc !==''){
+    this.setState({pwdRequired:false, nameRequired:false})
+
     this.props.firebase.push(`assignment/${this.props.match.params.id}`, allAssignment).then( data => {
       // wait for db to send response\
 
@@ -88,6 +102,7 @@ class CourseDetails extends React.Component {
       this.closeAssignment();
       this.setState({showTable:true})
     }) ;
+  }
   }
 
   createAssignment=()=>{
@@ -105,7 +120,7 @@ class CourseDetails extends React.Component {
     const { classes, assignment, auth, match } = this.props;
     // get the array of assignments
     let assignments = assignment ? assignment[match.params.id] : [];
-    const { open, message, showTable  } = this.state;
+    const { open, message, showTable,nameRequired,descRequired,textRequired,pathRequired  } = this.state;
 
     let activeTab = <h2>No Data</h2>;
     switch (this.state.value) {
@@ -145,7 +160,7 @@ class CourseDetails extends React.Component {
                 <Tab label="ASSIGNMENTS" />
                 <Tab label="EDIT" />
                 <Tab label="INSTRUCTOR VIEW" />
-              </Tabs>
+              </Tabs>      
               {activeTab}
             </Paper> 
           :
@@ -155,6 +170,10 @@ class CourseDetails extends React.Component {
           { this.state.isAsgmtActive && <CreateAssignment 
           handleClose={this.closeAssignment}
           handleSubmit={this.submitAssignment}
+          nameRequired={nameRequired}
+          descRequired={descRequired}
+          textRequired={textRequired}
+          pathRequired={pathRequired}
           /> }
         </AppFrame>
      
@@ -170,7 +189,10 @@ const AssignmentWithFirebase = compose(
         path: `assignment/${props.match.params.id}/`,
       }
     ]),
-  connect(({ firebase }, props) => ({ auth: firebase.auth, assignment: firebase.ordered.assignment }))
+  connect(({ firebase }) => ({ 
+    auth: firebase.auth, 
+    assignment: firebase.ordered.assignment
+  }))
 )(CourseDetails)
 
 CourseDetails.propTypes = {
@@ -181,4 +203,4 @@ CourseDetails.propTypes = {
   firebase: PropTypes.object.isRequired,
 };
 
-export const courseDetail = withStyles(styles)(AssignmentWithFirebase);
+export const CourseDetail = withStyles(styles)(AssignmentWithFirebase);
