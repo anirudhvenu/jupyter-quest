@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Table, {
+import {
   TableCell,
   TableHead,
   TableRow,
@@ -27,21 +26,21 @@ class EnhancedTableHead extends React.Component {
     };
   
     render() {
-      const { onSelectAllClick, order, orderBy, numSelected, rowCount, columnData } = this.props;
+      const { onSelectAllClick, order, orderBy, numSelected, rowCount, columnData, isCheckbox } = this.props;
   
       return (
         <TableHead>
         <TableRow>
           <TableCell padding="checkbox">
-            <Checkbox
+           {!isCheckbox && <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount}
               onChange={onSelectAllClick}
-            />
+            />}
           </TableCell>
           {columnData.map(column => {
             return (
-              <TableCell
+              <TableCell 
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? 'none' : 'default'}

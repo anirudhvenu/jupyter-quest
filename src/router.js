@@ -3,15 +3,19 @@ import {Switch,Route} from 'react-router-dom'
 import App from './components/app'
 import Courses from './pages/coursePage'
 import {courseDetail} from './components/courses/'
-import PrivateRoute from './privateRoute';
+import {LoginRoute, PrivateRoute} from './privateRoute';
 import Path from './components/path';
+import Login from './components/login'
+import Page404 from './components/404'
 
 const Root=()=>(
   <Switch>
-    <PrivateRoute path="/courses/:id" component={courseDetail} />
-    <PrivateRoute path="/courses" component={Courses} />
+    <PrivateRoute path="/courses/:id" exact component={courseDetail} />
+    <PrivateRoute path="/courses" exact component={Courses} />
     <PrivateRoute path="/path" component={Path} />
-    <Route path="/" component={App} />
+    <LoginRoute path="/login" component={Login} />
+    <Route path="/" exact component={App} />
+    <Route path="/*" component={Page404}/>
   </Switch>
 )
 

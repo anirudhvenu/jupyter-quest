@@ -1,25 +1,14 @@
 import React from 'react';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import keycode from 'keycode';
 import Table, {
   TableBody,
   TableCell,
   TableFooter,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
 } from 'material-ui/Table';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
-import Checkbox from 'material-ui/Checkbox';
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import FilterListIcon from 'material-ui-icons/FilterList';
 import { Link } from 'react-router-dom';
 import JoinModel from './joinModel'
 import Snackbar from 'material-ui/Snackbar';
@@ -29,8 +18,6 @@ import Snackbar from 'material-ui/Snackbar';
 import EnhancedTableHead from '../table/enhancedTableHead';
 import EnhancedTableToolbar from '../table/enhancedTableToolbar';
 import Button from 'material-ui/Button/Button';
-
-let counter = 0;
 
 
 const styles = theme => ({
@@ -137,7 +124,6 @@ class PublicCourse extends React.Component {
   };
 
   submitJoin=(e)=>{
-      console.log(e.password,"...........")
       this.handleClose();
       this.setState( ()=> { return {password:''} } )
       this.openNotification('Functionality to be developed');
@@ -169,6 +155,7 @@ class PublicCourse extends React.Component {
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <EnhancedTableHead
+              isCheckbox='true'
               columnData={columnData}
               numSelected={selected.length}
               order={order}
@@ -179,21 +166,13 @@ class PublicCourse extends React.Component {
             />
             <TableBody>
             {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((course,id) => {
-                  const isSelected = this.isSelected(id);
                 return (
                     <TableRow
-                      hover
-                      onClick={event => this.handleClick(event, id)}
-                      role="checkbox"
-                      aria-checked={isSelected}
-                      tabIndex={-1}
                       key={id}
-                      selected={isSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox checked={isSelected} />
                       </TableCell>
-                      <TableCell padding="none"><Link to="/courses">{course.value.title}</Link></TableCell>
+                      <TableCell padding="none"><Link to="#">{course.value.title}</Link></TableCell>
                       <TableCell>
                       <Button className="cancelBtn" 
                         raised color="primary" onClick={this.handleOpen}>Join Course</Button>

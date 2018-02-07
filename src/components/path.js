@@ -13,7 +13,7 @@ import Table, {
 } from 'material-ui/Table';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
@@ -22,18 +22,11 @@ import IconButton from 'material-ui/IconButton';
 import Tooltip from 'material-ui/Tooltip';
 import DeleteIcon from 'material-ui-icons/Delete';
 import FilterListIcon from 'material-ui-icons/FilterList';
-import { lighten } from 'material-ui/styles/colorManipulator';
-import Snackbar from 'material-ui/Snackbar';
-import Tabs, { Tab } from 'material-ui/Tabs';
 import Button from 'material-ui/Button';
 import CreateAssignment from './createAssignment'
 import AppFrame from '../AppFrame'
+import Notification from './notification'
 
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-  counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
-}
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
@@ -175,8 +168,6 @@ class Path extends React.Component {
       rowsPerPage: 5,
       isAsgmtActive:false,
       open: false,
-      vertical: 'top',
-      horizontal: 'right',
       message:null,
       value: 0
     };
@@ -232,7 +223,7 @@ class Path extends React.Component {
   handleNotification = (msg) =>{
     this.setState({ open: true,message:msg });
   };
-  handleClose = () => {
+  closeNotification = () => {
     this.setState({ open: false });
   };
   submitAssignment=(e)=>{
@@ -244,7 +235,7 @@ class Path extends React.Component {
     this.props.firebase.push('assignment', allAssignment).then( data => {
       // wait for db to send response\
 
-      this.handleNotification('Data Save Successfully');
+      this.handleNotification('Path Save Successfully');
       this.closeAssignment();
     }) ;
   }
@@ -268,13 +259,14 @@ class Path extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, assignment, auth } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page, vertical, horizontal, open, message  } = this.state;
+    const { classes, assignment } = this.props;
+    const { order, orderBy, selected, rowsPerPage, page, open, message  } = this.state;
     const emptyRows =  assignment ? rowsPerPage - Math.min(rowsPerPage, assignment.length - page * rowsPerPage) :'';
 
     return (
       <div>
-      <AppFrame>
+         <Notification message={message} open={open} handleClose={this.closeNotification}/>
+      <AppFrame pageTitle="Paths" >
      <div> <Button raised color="primary" onClick={this.createAssignment}>
           Create a Problem
       </Button>
@@ -346,16 +338,6 @@ class Path extends React.Component {
       handleSubmit={this.submitAssignment}
       /> }
       </AppFrame>
-     
-      <Snackbar
-      anchorOrigin={{ vertical, horizontal }}
-      open={open}
-      onClose={this.handleClose}
-      SnackbarContentProps={{
-        'aria-describedby': 'message-id',
-      }}
-      message={<span id="message-id">{message}</span>}
-    />
      </div>
     );
   }
@@ -368,6 +350,7 @@ const PathWithFirebase = compose(
 
 Path.propTypes = {
   classes: PropTypes.object.isRequired,
+  assignment: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(PathWithFirebase);

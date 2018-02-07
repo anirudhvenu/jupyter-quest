@@ -1,8 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import keycode from 'keycode';
 import AppBar from 'material-ui/AppBar';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
@@ -12,11 +10,6 @@ import {
   JoinedCourses,
   PublicCourses} from '../components/courses/';
 
-let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
-  counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
-}
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Course name' },
@@ -71,14 +64,12 @@ class CoursesContainer extends React.Component {
   };
 
   render() {
-    const { classes, courses, auth, publicCourses } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page } = this.state;
-    const bull = <span className={classes.bullet}>•</span>;
+    const { classes, courses, publicCourses, firebase } = this.props;
 
     let activeTab = <h2>No data</h2>;
     switch (this.state.value) {
       case 0 : {
-        activeTab = courses ? <MyCourses columnData={columnData}  data={courses}  /> : <h2>No data</h2>;
+        activeTab = courses ? <MyCourses columnData={columnData} firebase={firebase}  data={courses}  /> : <h2>No data</h2>;
         break;
       }
       case 1 : {
@@ -86,7 +77,7 @@ class CoursesContainer extends React.Component {
         break;
       }
       case 2: {
-        activeTab = publicCourses ? <PublicCourses columnData={columnData} data={publicCourses} />: <h2>No data</h2>;
+        activeTab = publicCourses ? <PublicCourses columnData={columnData} firebase={firebase} data={publicCourses} />: <h2>No data</h2>;
         break;
       }
       default : {
@@ -111,6 +102,8 @@ class CoursesContainer extends React.Component {
 
 CoursesContainer.propTypes = {
   classes: PropTypes.object.isRequired,
+  courses: PropTypes.array, 
+  publicCourses: PropTypes.array
 };
 
 export default withStyles(styles)(CoursesContainer);

@@ -1,22 +1,17 @@
 import React from 'react'
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import PropTypes from 'prop-types'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
-import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 import AppFrame from '../AppFrame'
 import CourseTable from '../components/courses';
+import Modal from 'material-ui/Modal';
 import {CreateCourse} from '../components/courses/';
-import Paper from 'material-ui/Paper/Paper';
-import Snackbar from 'material-ui/Snackbar';
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Notification from '../components/notification';
+import {BASE_URL} from '../config';
   /**
    * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
    */
@@ -46,22 +41,39 @@ const styles = theme => ({
     marginLeft:'auto',
     marginRight:'auto'
   },
+  paper: {
+    position: 'absolute',
+    width: theme.spacing.unit * 50,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing.unit * 4,
+  },
 });
+
+function getModalStyle() {
+  const top = '50';
+  const left = '50';
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
 
  class Courses extends React.Component{
     constructor(prop){
       super(prop)
       this.state={
-        courseActive:false,
+        courseModelActive:false,
         password:'',
         name:'',
         desc:'',
         open: false,
-        vertical: 'top',
-        horizontal: 'right',
         message:null,
         value: 0,
-        alertMsg:true,
+        courseLink:null,
       }
         this.handleInput=this.handleInput.bind(this)
     }
@@ -74,15 +86,15 @@ const styles = theme => ({
       this.setState({ open: true,message:msg });
     };
   
-    handleClose = () => {
+    closeNotification = () => {
       this.setState({ open: false });
     };
 
-    handleInput(e){
+    handleInput=(e)=>{
       this.setState({[e.target.name]:e.target.value})
     }
     createCourse=()=>{
-      this.setState({courseActive:true, alertMsg:false})
+      this.setState({courseModelActive:true})
     }
     cancelSubmit=()=>{
       
@@ -90,24 +102,23 @@ const styles = theme => ({
         name: '',
         desc: '',
         password: '',
-        alertMsg:true,
-        courseActive:false})
+        courseModelActive:false,
+        courseLink:null})
     }
     submitCourse=(formData)=>{
       let allCourses={
         title:formData.name,
-        desc:formData.desc,
         pass:formData.password,
         uid:this.props.auth.uid
       }    
-      // push data to <firebase></firebase>
-      this.props.firebase.push('courses', allCourses).then( data => {
-        // wait for db to send response\
-
-        this.handleNotification('Data Save Successfully');
-        this.cancelSubmit();
-      }) ;
-      
+      if(formData.name !== '' && formData.password !== ''){
+      //  push data to firebase
+        this.props.firebase.push('courses', allCourses).then( data => {
+          // wait for db to send response\
+          this.setState( { courseLink:`${BASE_URL}courses/${data.key}` } )
+          this.handleNotification(`Course Added Successfuly!`);
+        }) ;
+      }
     }
     componentWillReceiveProps(props){
       if(!props.auth.emailVerified)
@@ -115,43 +126,42 @@ const styles = theme => ({
     }
     render(){
       const {classes, courses, auth, firebase, publicCourses }  = this.props;
-      const { vertical, horizontal, open, message, alertMsg } = this.state;
+      const { open, message, courseLink } = this.state;
     return(
     <div>
-      <AppFrame>
-      { !auth.emailVerified && <div  className={classes.superCard}>
-      <Card className={classes.card}>
-        <CardContent>
-          <Typography className={classes.title}>Restricted Content</Typography>
-          <Typography type="headline" component="h2">
-           Please Log In
-          </Typography>
-        </CardContent>
-      </Card>
-    </div> }
-       {auth.emailVerified && <Button raised onClick={this.createCourse}>
-          Create a Course
-      </Button>}
-      {!this.state.courseActive ? <CourseTable courses={courses} auth={auth} publicCourses={publicCourses} /> : ''}
-        
-
-       { this.state.courseActive && (<div>
-         <CreateCourse isCourseActive={this.state.courseActive} 
-         handleSubmit={this.submitCourse.bind(this)} 
-         handleCancel={this.cancelSubmit.bind(this)} 
+       <Notification message={message} open={open} handleClose={this.closeNotification}/>
+      <AppFrame pageTitle="Courses" >
+       <Button raised onClick={this.createCourse}>Create a Course</Button>
+       <CourseTable firebase={firebase} courses={courses} auth={auth} publicCourses={publicCourses} /> 
+       <div>
+         {!courseLink && 
+         <CreateCourse 
+         openModel={this.state.courseModelActive} 
+         handleSubmit={this.submitCourse} 
+         handleClose={this.cancelSubmit} 
+         handleInput={this.handleInput}
+         name={this.state.name}
+         password={this.state.password}
          />
-          </div>) }
+         }
+         {courseLink && 
+          <Modal 
+            aria-labelledby="simple-modal-title"
+            aria-describedby="simple-modal-description"
+            open={this.state.courseModelActive}
+            onClose={this.cancelSubmit}
+          >
+            <div style={getModalStyle()} className={classes.paper}>
+            <Typography>
+              <h3>This is the URL that can be shared to all participants in the course.</h3>
+              <h4>{courseLink}</h4> 
+              </Typography>
+              <Button raised color="primary" type="submit" onClick={this.cancelSubmit} >Okay</Button>
+            </div>
+          </Modal>
+          }
+          </div>
       </AppFrame>
-
-      <Snackbar
-          anchorOrigin={{ vertical, horizontal }}
-          open={open}
-          onClose={this.handleClose}
-          SnackbarContentProps={{
-            'aria-describedby': 'message-id',
-          }}
-          message={<span id="message-id">{message}</span>}
-        />
     </div>
   )
 }
@@ -180,6 +190,9 @@ const CoursesWithFirebase = compose(
 
  Courses.propTypes = {
   classes: PropTypes.object.isRequired,
+  courses: PropTypes.array,
+  auth: PropTypes.object.isRequired,
+  publicCourses: PropTypes.array
 }
 
 export default withStyles(styles)(CoursesWithFirebase)

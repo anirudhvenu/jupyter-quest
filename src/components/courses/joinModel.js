@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import { FormHelperText } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 
 function getModalStyle() {

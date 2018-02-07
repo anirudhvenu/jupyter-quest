@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import keycode from 'keycode';
@@ -7,19 +6,11 @@ import Table, {
   TableBody,
   TableCell,
   TableFooter,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
 } from 'material-ui/Table';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import Checkbox from 'material-ui/Checkbox';
-import IconButton from 'material-ui/IconButton';
-import Tooltip from 'material-ui/Tooltip';
-import DeleteIcon from 'material-ui-icons/Delete';
-import FilterListIcon from 'material-ui-icons/FilterList';
 import { Link } from 'react-router-dom';
 
 
@@ -27,8 +18,7 @@ import { Link } from 'react-router-dom';
 
 import EnhancedTableHead from '../table/enhancedTableHead';
 import EnhancedTableToolbar from '../table/enhancedTableToolbar';
-
-let counter = 0;
+import Notification from '../notification'
 
 const styles = theme => ({
   root: {
@@ -53,6 +43,8 @@ class MyCourse extends React.Component {
       selected: [],
       page: 0,
       rowsPerPage: 5,
+      message:null,
+      open:false
     };
   }
 
@@ -66,15 +58,15 @@ class MyCourse extends React.Component {
 
     const data =
       order === 'desc'
-        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
-        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
+        ? this.props.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
+        : this.props.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 
     this.setState({ data, order, orderBy });
   };
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.id) });
+      this.setState({ selected: this.props.data.map(n => n.key) });
       return;
     }
     this.setState({ selected: [] });
@@ -115,16 +107,38 @@ class MyCourse extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
+  handleNotification = (msg) =>{
+    this.setState({ open: true, message:msg });
+  };
+
+  closeNotification = () => {
+    this.setState({ open: false });
+  };
+
+  deleteData=()=>{
+    this.handleNotification("Firebase function for deleting assignment along with courses is pending.")
+    const {firebase} = this.props;
+    let selectedData = this.state.selected;
+   // remove course from db.
+     selectedData.forEach( courseId => {
+      firebase.remove(`courses/${courseId}/`)
+      //.then( id => this.handleNotification("Delete Course Successfully"))
+      //.catch( err => this.handleNotification("Found Error"))
+    } )
+    this.setState({selected:[]})
+  }
+
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
     const { classes, data, columnData } = this.props;
-    const { order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { order, orderBy, selected, rowsPerPage, page, message, open } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar title='Courses'  numSelected={selected.length} />
+      <Notification message={message} open={open} handleClose={this.closeNotification}/>
+        <EnhancedTableToolbar title='Courses'  numSelected={selected.length} deleteOpr={this.deleteData} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table}>
             <EnhancedTableHead
@@ -138,15 +152,15 @@ class MyCourse extends React.Component {
             />
             <TableBody>
             {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((course,id) => {
-                  const isSelected = this.isSelected(id);
+                  const isSelected = this.isSelected(course.key);
                 return (
                     <TableRow
                       hover
-                      onClick={event => this.handleClick(event, id)}
+                      onClick={event => this.handleClick(event, course.key)}
                       role="checkbox"
                       aria-checked={isSelected}
                       tabIndex={-1}
-                      key={id}
+                      key={course.key}
                       selected={isSelected}
                     >
                       <TableCell padding="checkbox">

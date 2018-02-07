@@ -1,13 +1,9 @@
 import React, {Component} from 'react'
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Button from 'material-ui/Button';
 import { withStyles } from 'material-ui/styles';
-import { FormControl, FormHelperText,FormControlLabel, FormGroup,FormLabel } from 'material-ui/Form';
+import { FormControl, FormHelperText,FormControlLabel, FormLabel } from 'material-ui/Form';
 import Radio, { RadioGroup } from 'material-ui/Radio';
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import PropTypes from 'prop-types'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
 import TextField from 'material-ui/TextField';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
@@ -61,9 +57,8 @@ class CreateAssignment extends Component {
         }
 
         handleChange = (event, value) => {
-          console.log(value,"......value")
           this.setState({ value });
-          if(value=='Notebook'){
+          if(value==='Notebook'){
             this.setState({answerType:2});
           } else{
             this.setState({answerType:1});
@@ -82,8 +77,8 @@ class CreateAssignment extends Component {
         // }
 
     render() {
-        const {classes, isCourseActive, handleClose, handleSubmit }  = this.props;
-        const { name, desc, path, text, isSelectActive, answerType } = this.state;
+        const {classes, handleClose, handleSubmit }  = this.props;
+        const { name, desc, path, text, answerType } = this.state;
         if(answerType===1)
         isActive=true
         else
@@ -126,7 +121,7 @@ class CreateAssignment extends Component {
               <FormHelperText id="name-error-text">Description Required</FormHelperText>
             </div>
            {isActive && <div>
-              Text Field
+              Text
             <div>
               <TextField
                   className={classes.textField}
@@ -152,7 +147,7 @@ class CreateAssignment extends Component {
           <FormHelperText>Path Required</FormHelperText>
            </FormControl> }
             <div>
-            {/* <input
+            <input
               accept=".json"
               className={classes.input}
               id="raised-button-file"
@@ -162,7 +157,7 @@ class CreateAssignment extends Component {
              <br />
             <label style={{marginRight:'10px'}} htmlFor="raised-button-file">
               <Button raised component="span" color="default" className={classes.button}> Upload File </Button>
-            </label> */}
+            </label>
               <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, desc, path, text })}} >Submit</Button>
               <Button className="cancelBtn" 
               raised color="default" onClick={()=>handleClose()}>Cancel</Button>
@@ -174,6 +169,9 @@ class CreateAssignment extends Component {
 
 CreateAssignment.propTypes = {
     classes: PropTypes.object.isRequired,
+    isCourseActive: PropTypes.string,
+    handleClose: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired 
   }
   
   export default withStyles(styles)(CreateAssignment)
