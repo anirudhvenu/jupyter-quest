@@ -15,6 +15,7 @@ import {
   AssignmentList, 
   InstructorView, 
   EditAssignment} from '../assignments/';
+import { User_Roles_Instructor } from '../../app-contant';
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
@@ -117,7 +118,7 @@ class CourseDetails extends React.Component {
   };
 
   render() {
-    const { classes, assignment, auth, match } = this.props;
+    const { classes, assignment, auth, match, userType } = this.props;
     // get the array of assignments
     let assignments = assignment ? assignment[match.params.id] : [];
     const { open, message, showTable,nameRequired,descRequired,textRequired,pathRequired  } = this.state;
@@ -150,6 +151,7 @@ class CourseDetails extends React.Component {
           {auth.emailVerified 
           ?
             <Paper className={classes.root}>
+            {userType === User_Roles_Instructor && 
               <Tabs
                 value={this.state.value}
                 onChange={this.handleChange}
@@ -160,7 +162,8 @@ class CourseDetails extends React.Component {
                 <Tab label="ASSIGNMENTS" />
                 <Tab label="EDIT" />
                 <Tab label="INSTRUCTOR VIEW" />
-              </Tabs>      
+              </Tabs>
+              }              
               {activeTab}
             </Paper> 
           :

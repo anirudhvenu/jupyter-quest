@@ -2,15 +2,16 @@ import React from 'react'
 import {Switch,Route} from 'react-router-dom'
 import App from './components/app'
 import Courses from './pages/coursePage'
-import {courseDetail} from './components/courses/'
+import {CourseDetail} from './components/courses/'
 import {LoginRoute, PrivateRoute} from './privateRoute';
+import PrivateInstructorRoute from './privateInstructorRoute';
 import Path from './components/path';
 import Login from './components/login'
 import Page404 from './components/404'
 
 const Root=()=>(
   <Switch>
-    <PrivateRoute path="/courses/:id" exact component={courseDetail} />
+    <PrivateInstructorRoute path="/courses/:id" component={CourseDetail} />
     <PrivateRoute path="/courses" exact component={Courses} />
     <PrivateRoute path="/path" component={Path} />
     <LoginRoute path="/login" component={Login} />
