@@ -172,7 +172,7 @@ class PublicCourse extends React.Component {
                     >
                       <TableCell padding="checkbox">
                       </TableCell>
-                      <TableCell padding="none"><Link to="#">{course.value.title}</Link></TableCell>
+                      <TableCell padding="none"><Link to={`/courses/${course.key}`}>{course.value.title}</Link></TableCell>
                       <TableCell>
                       <Button className="cancelBtn" 
                         raised color="primary" onClick={this.handleOpen}>Join Course</Button>

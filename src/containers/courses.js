@@ -74,6 +74,8 @@ function getModalStyle() {
         message:null,
         value: 0,
         courseLink:null,
+        nameRequired:false,
+        pwdRequired:false
       }
         this.handleInput=this.handleInput.bind(this)
     }
@@ -102,6 +104,8 @@ function getModalStyle() {
         name: '',
         desc: '',
         password: '',
+        nameRequired:false,
+        pwdRequired:false,
         courseModelActive:false,
         courseLink:null})
     }
@@ -111,7 +115,14 @@ function getModalStyle() {
         pass:formData.password,
         uid:this.props.auth.uid
       }    
-      if(formData.name !== '' && formData.password !== ''){
+      if(formData.name === '' && formData.password!=='')
+        this.setState({nameRequired:true, pwdRequired:false})
+        if(formData.name !== '' && formData.password ==='')
+        this.setState({pwdRequired:true, nameRequired:false})
+        if(formData.name === '' && formData.password ==='')
+        this.setState({pwdRequired:true, nameRequired:true})
+        if(formData.name !== '' && formData.password !==''){
+        this.setState({pwdRequired:false, nameRequired:false})
       //  push data to firebase
         this.props.firebase.push('courses', allCourses).then( data => {
           // wait for db to send response\
@@ -126,13 +137,17 @@ function getModalStyle() {
     }
     render(){
       const {classes, courses, auth, firebase, publicCourses }  = this.props;
-      const { open, message, courseLink } = this.state;
+      const { open, message, courseLink, nameRequired, pwdRequired } = this.state;
+      let publicCourse;
+      if(publicCourses){
+        publicCourse = publicCourses.filter( course => course.value.uid !== auth.uid ? course : null );
+      }
     return(
     <div>
        <Notification message={message} open={open} handleClose={this.closeNotification}/>
       <AppFrame pageTitle="Courses" >
        <Button raised onClick={this.createCourse}>Create a Course</Button>
-       <CourseTable firebase={firebase} courses={courses} auth={auth} publicCourses={publicCourses} /> 
+       <CourseTable firebase={firebase} courses={courses} auth={auth} publicCourses={publicCourse} /> 
        <div>
          {!courseLink && 
          <CreateCourse 
@@ -142,6 +157,8 @@ function getModalStyle() {
          handleInput={this.handleInput}
          name={this.state.name}
          password={this.state.password}
+         nameRequired={nameRequired}
+         pwdRequired={pwdRequired}
          />
          }
          {courseLink && 
@@ -184,7 +201,7 @@ const CoursesWithFirebase = compose(
   connect(({ firebase }) => ({ 
     auth: firebase.auth, 
     courses: firebase.ordered.myCourses, 
-    publicCourses: firebase.ordered.publicCourses 
+    publicCourses: firebase.ordered.publicCourses
   }))
 )(Courses)
 
