@@ -15,7 +15,7 @@ import {
   AssignmentList, 
   InstructorView, 
   EditAssignment} from '../assignments/';
-import { User_Roles_Instructor } from '../../app-contant';
+import { User_Roles_Instructor } from '../../app-constant';
 
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },

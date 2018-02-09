@@ -1,4 +1,4 @@
-import {User_Roles_Instructor, User_Roles_Student} from '../app-contant';
+import {User_Roles_Instructor, User_Roles_Student} from '../app-constant';
 /**
  * Get User Type of Loggedin User
  * @param {*} auth 
