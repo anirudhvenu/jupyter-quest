@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField';
 import Select from 'material-ui/Select';
 import { MenuItem } from 'material-ui/Menu';
 import Input, { InputLabel } from 'material-ui/Input';
+import readJson from '../helpers/readJson.js';
 
 const styles = theme => ({
     container: {
@@ -47,7 +48,8 @@ class CreateAssignment extends Component {
             value: '',
             path: '',
             text:'',
-            answerType:1
+            answerType:1,
+            uploadedProblem:null
             }
         this.handleInput=this.handleInput.bind(this)
         }
@@ -65,7 +67,12 @@ class CreateAssignment extends Component {
           }
         };
 
-      
+        
+        fileHandle = (e) => {
+          readJson(e.target.files[0], (data) => {
+            this.setState({"uploadedProblem":data});
+          })
+        }
 
         // fileLoader=()=>{
         //   let file = document.getElementById('raised-button-file').value
@@ -151,8 +158,8 @@ class CreateAssignment extends Component {
               accept=".json"
               className={classes.input}
               id="raised-button-file"
-              multiple
               type="file"
+              onChange={this.fileHandle}
             />
              <br />
             <label style={{marginRight:'10px'}} htmlFor="raised-button-file">
