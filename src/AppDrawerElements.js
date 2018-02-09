@@ -50,12 +50,14 @@ const styles = theme => ({
           <ListItemText primary="Courses" />
         </ListItem>
         </Link>
+        <Link className="linkStyle" to="/path">
         <ListItem button>
         <ListItemIcon>
         <StarIcon />
         </ListItemIcon>
         <ListItemText primary="Paths" />
       </ListItem>
+      </Link>
     </List>
     <Divider />
     <List>

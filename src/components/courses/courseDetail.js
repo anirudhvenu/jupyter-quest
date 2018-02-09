@@ -15,8 +15,8 @@ import {
   AssignmentList, 
   InstructorView, 
   EditAssignment} from '../assignments/';
-import { User_Roles_Instructor } from '../../app-constant';
-
+  import { User_Roles_Instructor } from '../../app-constant';
+  
 const columnData = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
   { id: 'calories', numeric: true, disablePadding: false, label: 'Description' }
@@ -33,6 +33,24 @@ const columnDataForEditAssignment = [
   { id: 'Detail', numeric: true, disablePadding: false, label: 'Details' },
   { id: 'Order', numeric: true, disablePadding: false, label: 'Order' }
 ];
+
+const columnDataForAssignmentLists = [
+{ id: 'sDetail', numeric: false, disablePadding: true, label: 'Student blah detail' },
+  { id: 'desert', numeric: true, disablePadding: false, label: 'Favorite Dessert blah detail' },
+  { id: 'team1Asignmt', numeric: true, disablePadding: false, label: 'Assignment One blah detail' },
+  { id: 'team1Name', numeric: true, disablePadding: false, label: 'Team Name blah detail' },
+  { id: 'team2Asigmt', numeric: true, disablePadding: false, label: 'Assignment Two blah detail' },
+  { id: 'team2Name', numeric: true, disablePadding: false, label: 'Team Name blah detail' }
+];
+
+const columnDataForInstructorView = [
+  { id: 'sDetail', numeric: false, disablePadding: true, label: 'Student blah detail' },
+    { id: 'desert', numeric: true, disablePadding: false, label: 'Favorite Dessert blah detail' },
+    { id: 'team1Asignmt', numeric: true, disablePadding: false, label: 'Assignment One blah detail' },
+    { id: 'team1Name', numeric: true, disablePadding: false, label: 'Team Name blah detail' },
+    { id: 'team2Asigmt', numeric: true, disablePadding: false, label: 'Assignment Two blah detail' },
+    { id: 'team2Name', numeric: true, disablePadding: false, label: 'Team Name blah detail' }
+  ];
 
 const styles = theme => ({
   root: {
@@ -126,17 +144,22 @@ class CourseDetails extends React.Component {
     let activeTab = <h2>No Data</h2>;
     switch (this.state.value) {
       case 0 : {
-        activeTab = assignments ? <AssignmentList  firebase={this.props.firebase} columnData={columnData} uid={match.params.id}  data={assignments}  /> : <h2>No data</h2>;
+        activeTab = assignments ? <AssignmentList  firebase={this.props.firebase} uid={match.params.id} 
+        create={this.createAssignment} columnData={columnDataForAssignmentLists}  
+        data={assignments} showTable={showTable} /> : <h2>No data</h2>;
         break;
       }
       case 1 : {
-        activeTab =   <EditAssignment firebase={this.props.firebase} uid={match.params.id} create={this.createAssignment} columnData={columnDataForEditAssignment}  
+        activeTab =   <EditAssignment firebase={this.props.firebase} uid={match.params.id} 
+        create={this.createAssignment} columnData={columnDataForEditAssignment}  
         data={assignments} showTable={showTable}/>
    
         break;
       }
       case 2: {
-        activeTab = <InstructorView />
+        activeTab = <InstructorView  firebase={this.props.firebase} uid={match.params.id} 
+        create={this.createAssignment} columnData={columnDataForInstructorView}  
+        data={assignments} showTable={showTable}/>
         break;
       }
       default : {
