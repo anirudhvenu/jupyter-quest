@@ -49,6 +49,9 @@ class PublicCourse extends React.Component {
       vertical: 'top',
       horizontal: 'right',
       message:null,
+      coursePwd:null,
+      courseId:null,
+      courseName:''
     };
   }
 
@@ -124,13 +127,32 @@ class PublicCourse extends React.Component {
   };
 
   submitJoin=(e)=>{
+    let mainPwd = this.state.coursePwd
+    let studentPwd = e.password
+    let userId = this.props.auth.uid
+    let courseKey = this.state.courseId
+    let courseName = this.state.courseName
+    
+    if(mainPwd === studentPwd){
+      this.props.firebase.set(`courseMembers/${courseKey}/${userId}`,true ).then( data => {
+        this.props.firebase.set(`myCourses/${userId}/${courseKey}`,{joined:true, title:courseName} ).then( data => {
+          // wait for db to send response\
+          this.openNotification('You joined course ');
+          this.handleClose();
+        })
+      }) ;
+    }  else{
+      this.openNotification('Password not matched');
       this.handleClose();
-      this.setState( ()=> { return {password:''} } )
-      this.openNotification('Functionality to be developed');
+    }
+      // this.handleClose();
+      // this.setState( ()=> { return {password:''} } )
+
+      // this.openNotification('Functionality to be developed');
   }
 
-  handleOpen = () => {
-    this.setState({ openModel: true });
+  handleOpen = (pwd, courseKey, courseName) => {
+    this.setState({ openModel: true, coursePwd:pwd, courseId:courseKey, courseName: courseName });
   };
 
   handleClose = (e) => {
@@ -145,9 +167,10 @@ class PublicCourse extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, data, columnData } = this.props;
+    const { classes, data, columnData, joinedCourses } = this.props;
     const { order, orderBy, selected, rowsPerPage, page, password, vertical,openNotification, horizontal, message } = this.state;
     const emptyRows = data ? rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage) :'';
+    console.log(joinedCourses,"<<<>>>>")
     return (
         <div>
         <Paper className={classes.root}>
@@ -173,9 +196,9 @@ class PublicCourse extends React.Component {
                       <TableCell padding="checkbox">
                       </TableCell>
                       <TableCell padding="none"><Link to={`/courses/${course.key}`}>{course.value.title}</Link></TableCell>
-                      <TableCell>
-                      <Button className="cancelBtn" 
-                        raised color="primary" onClick={this.handleOpen}>Join Course</Button>
+                      <TableCell> 
+                     <Button className="cancelBtn" 
+                        raised color="primary" onClick={()=>this.handleOpen(course.value.pass, course.key, course.value.title)}>Join Course</Button>
                       </TableCell>
                     </TableRow>
                 );

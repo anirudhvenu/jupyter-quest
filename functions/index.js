@@ -10,6 +10,26 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+exports.passwordHashing = functions.database.ref('/courses/{courseId}/pass').onCreate(event => {   
+  const password = event.data.val().toString();
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(password, salt);
+  return event.data.ref.parent.child('pass').set(hash);
+});
+
+exports.checkPassword = functions.https.onRequest( (req,res) => {
+  if(req.query.password && req.query.coursePassword) {
+    const password = req.query.password;
+    const hash = req.query.coursePassword;
+    res.send(bcrypt.compareSync(password, hash));
+  } else{
+    res.status(403).send('forbidden!')
+  }
+})
+
 exports.downloadEvents = functions.https.onRequest((request, response) => {
   const { token, start, stop = 0 } = request.query
 

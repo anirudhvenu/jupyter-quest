@@ -136,7 +136,7 @@ function getModalStyle() {
       this.cancelSubmit()
     }
     render(){
-      const {classes, courses, auth, firebase, publicCourses }  = this.props;
+      const {classes, courses, auth, firebase, publicCourses, joinedCourses }  = this.props;
       const { open, message, courseLink, nameRequired, pwdRequired } = this.state;
       let publicCourse;
       if(publicCourses){
@@ -147,7 +147,7 @@ function getModalStyle() {
        <Notification message={message} open={open} handleClose={this.closeNotification}/>
       <AppFrame pageTitle="Courses" >
        <Button raised onClick={this.createCourse}>Create a Course</Button>
-       <CourseTable firebase={firebase} courses={courses} auth={auth} publicCourses={publicCourse} /> 
+       <CourseTable firebase={firebase} courses={courses} auth={auth} publicCourses={publicCourse} joinedCourses={joinedCourses} /> 
        <div>
          {!courseLink && 
          <CreateCourse 
@@ -169,10 +169,8 @@ function getModalStyle() {
             onClose={this.cancelSubmit}
           >
             <div style={getModalStyle()} className={classes.paper}>
-            <Typography>
               <h3>This is the URL that can be shared to all participants in the course.</h3>
               <h4>{courseLink}</h4> 
-              </Typography>
               <Button raised color="primary" type="submit" onClick={this.cancelSubmit} >Okay</Button>
             </div>
           </Modal>
@@ -195,13 +193,18 @@ const CoursesWithFirebase = compose(
     {
       path:'courses',
       storeAs: 'publicCourses'
+    },
+    {
+      path:`myCourses/${store.getState().firebase.auth.uid}`,
+      storeAs:'joinedCourses'
     }
   ]
   }),
   connect(({ firebase }) => ({ 
     auth: firebase.auth, 
     courses: firebase.ordered.myCourses, 
-    publicCourses: firebase.ordered.publicCourses
+    publicCourses: firebase.ordered.publicCourses,
+    joinedCourses: firebase.ordered.joinedCourses
   }))
 )(Courses)
 
