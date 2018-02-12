@@ -1,26 +1,41 @@
 import React from 'react'
-import {Switch,Route,Redirect} from 'react-router-dom'
+import {Route,Redirect} from 'react-router-dom'
 import {connect} from 'react-redux'
 import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
 import {compose} from 'redux'
-import App from './components/app'
 
 
-export const PrivateRoute = ({auth, ...rest}) => (
+export const PrivateRouteComponent = ({auth, ...rest}) => (
     <div>
         {isLoaded(auth)
             ? !isEmpty(auth)
                 ? <Route {...rest} />
-                : <Redirect to='/' />
+                : <Redirect to='/login' />
             : 'Loading'
         }
         
     </div>
 )
 
-let getAuth = compose(
+export const AuthRoute = ({auth, ...rest}) => (
+    <div>
+        {isLoaded(auth)
+            ? !isEmpty(auth)
+                ? <Redirect to='/' />
+                : <Route {...rest} />
+            : 'Loading'
+        }
+        
+    </div>
+)
+
+export const PrivateRoute = compose(
     firebaseConnect(),
     connect( ({firebase}) => ({ auth: firebase.auth }) )
-)(PrivateRoute)
+)(PrivateRouteComponent)
 
-export default getAuth;
+export const LoginRoute = compose(
+    firebaseConnect(),
+    connect( ({firebase}) => ({ auth: firebase.auth }) )
+)(AuthRoute)
+

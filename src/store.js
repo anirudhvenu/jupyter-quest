@@ -1,7 +1,10 @@
-import { applyMiddleware, createStore, compose } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
+import createSagaMiddleware from 'redux-saga'
+import { composeWithDevTools } from 'redux-devtools-extension';
 import logger from 'redux-logger';
-import { reactReduxFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import * as firebase from 'firebase';
+import rootSaga from './rootSaga';
 // import reducers
 import reducers from './reducers/';
 
@@ -24,11 +27,15 @@ const config = {
   attachAuthIsReady: true,
 }
 
-const createStoreWithFirebase = compose(
+const createStoreWithFirebase = composeWithDevTools(
   reactReduxFirebase(firebase, config),
 )(createStore)
 
-const store = createStoreWithFirebase(reducers, applyMiddleware(logger, firebaseLogger))
+
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore( reducers, composeWithDevTools( reactReduxFirebase(firebase, config),applyMiddleware( firebaseLogger,sagaMiddleware)) )
 
 
 export default store;
+sagaMiddleware.run(rootSaga, getFirebase);

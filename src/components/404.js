@@ -1,11 +1,13 @@
+
 import React from 'react'
 import AppFrame from '../AppFrame'
 import Typography from 'material-ui/Typography/Typography';
-const App =()=>(
+const PageError =()=>(
   <div>
   <AppFrame pageTitle="LTI Starter" >
-    <Typography>Welcome to Jupyter App</Typography>
+    <Typography>404!!</Typography>
+    <Typography>Page Not Found</Typography>
   </AppFrame>
   </div>
 )
-export default App
+export default PageError

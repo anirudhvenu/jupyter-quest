@@ -1,11 +1,12 @@
+
 import React from 'react'
 import AppFrame from '../AppFrame'
 import Typography from 'material-ui/Typography/Typography';
-const App =()=>(
+const Login =()=>(
   <div>
   <AppFrame pageTitle="LTI Starter" >
-    <Typography>Welcome to Jupyter App</Typography>
+    <Typography>You must logged in to see the table</Typography>
   </AppFrame>
   </div>
 )
-export default App
+export default Login

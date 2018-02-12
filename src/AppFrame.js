@@ -13,7 +13,7 @@ import MenuIcon from 'material-ui-icons/Menu'
 import MoreVertIcon from 'material-ui-icons/MoreVert'
 
 // firebase
-import { firebaseConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { firebaseConnect, isEmpty } from 'react-redux-firebase'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import Button from 'material-ui/Button/Button';
@@ -113,7 +113,7 @@ class AppFrame extends React.Component {
 
 
   render() {
-    const { children, classes, auth, firebase } = this.props;
+    const { children, classes, auth, firebase, pageTitle } = this.props;
     let appSidebarClasses = `${classes.drawer} app-sidebar`;
     return (
       <div className={classes.root}>
@@ -130,7 +130,7 @@ class AppFrame extends React.Component {
                 </IconButton>
               </Hidden>
               <Typography className={classes.appBarTitle} type="title" color="inherit" noWrap>
-              Jupyter Quest
+              {pageTitle}
               </Typography>
               {isEmpty(auth)
                   ? <Button color="contrast" className={classes.button} onClick={() => firebase.login({ provider: 'google', type: 'popup' })}>Login With Google</Button>

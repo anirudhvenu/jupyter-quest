@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Modal from 'material-ui/Modal';
 import Button from 'material-ui/Button';
-import { FormHelperText, FormControl } from 'material-ui/Form';
+import { FormHelperText } from 'material-ui/Form';
 import TextField from 'material-ui/TextField';
 
 function getModalStyle() {
@@ -32,13 +32,12 @@ class SimpleModal extends React.Component {
     constructor(props){
         super(props)
   this.state = {
-    password: '',
-    name:''
+    password: ''
   };
 }
 
   render() {
-    const { classes, openModel, handleClose, handleSubmit, name, password, handleInput, nameRequired, pwdRequired } = this.props;
+    const { classes, openModel, handleClose, handleSubmit, password, handlePassword } = this.props;
     return (
       <div>
         <Modal
@@ -50,33 +49,19 @@ class SimpleModal extends React.Component {
           <div style={getModalStyle()} className={classes.paper}>
             <Typography type="title" id="modal-title">
             <div className={classes.container} >
-            <h2>Create Course</h2>
-
-            Name
-            <div>
-            <FormControl>
-                <TextField type="text"
-                    className={classes.textField}
-                    name="name" value={name}
-                    onChange={(e) => {handleInput(e)}}
-                    />
-               { nameRequired && <FormHelperText className="error-text">Name Required</FormHelperText>}
-                </FormControl>
-            </div>
+            <h2>JOIN COURSE</h2>
               Password
             <div>
-            <FormControl>
                 <TextField type="password"
                     className={classes.textField}
                     name="password" value={password}
-                    onChange={(e) => {handleInput(e)}}/>
-               { pwdRequired && <FormHelperText className="error-text">Password Required</FormHelperText>}
-                </FormControl>
+                    onChange={(e) => {handlePassword(e)}}/>
+                <FormHelperText id="name-error-text">Password Required</FormHelperText>
             </div>
-        </div><br/>
+        </div>
             </Typography>
             <Typography type="subheading" id="simple-modal-description">
-            <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ name, password })}} >Submit</Button>
+            <Button raised color="primary" type="submit" onClick={() =>{handleSubmit({ password })}} >Submit</Button>
               <Button className="cancelBtn" 
               raised color="default" onClick={ () => {handleClose() }}>Cancel</Button>
             </Typography>
@@ -89,13 +74,9 @@ class SimpleModal extends React.Component {
 
 SimpleModal.propTypes = {
   classes: PropTypes.object.isRequired,
-  openModel: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  handleInput: PropTypes.func.isRequired
 };
 
 // We need an intermediary variable for handling the recursive nesting.
-export const CreateCourse = withStyles(styles)(SimpleModal);
+const JoinModel = withStyles(styles)(SimpleModal);
+
+export default JoinModel;

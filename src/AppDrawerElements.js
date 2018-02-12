@@ -5,15 +5,7 @@ import {Link} from 'react-router-dom'
 import Divider from 'material-ui/Divider'
 import { MenuItem } from 'material-ui/Menu'
 import StarIcon from 'material-ui-icons/Star'
-
-import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import ListSubheader from 'material-ui/List/ListSubheader';
-import Collapse from 'material-ui/transitions/Collapse';
-import InboxIcon from 'material-ui-icons/MoveToInbox';
-import DraftsIcon from 'material-ui-icons/Drafts';
-import ExpandLess from 'material-ui-icons/ExpandLess';
-import ExpandMore from 'material-ui-icons/ExpandMore';
 
 
 const styles = theme => ({
@@ -38,36 +30,34 @@ const styles = theme => ({
   };
 
   render(){
-    const { classes } = this.props;
     return(
   <div>
     <Divider />
     <List>
+    <Link className="linkStyle" to="/">
       <ListItem button>
         <ListItemIcon>
           <StarIcon />
         </ListItemIcon>
-        <Link className="linkStyle" to="/">Home</Link>
+        <ListItemText primary="Home" />
       </ListItem>
-      {/* <ListItem button>
-        <ListItemIcon>
-          <StarIcon />
-        </ListItemIcon>
-        <Link className="linkStyle" to="/courses">Courses</Link>
-      </ListItem> */}
-
+      </Link>
+       <Link className="linkStyle" to="/courses">
         <ListItem button>
           <ListItemIcon>
           <StarIcon />
           </ListItemIcon>
-          <Link className="linkStyle" to="/courses">Courses</Link>
+          <ListItemText primary="Courses" />
         </ListItem>
+        </Link>
+        <Link className="linkStyle" to="/path">
         <ListItem button>
         <ListItemIcon>
         <StarIcon />
         </ListItemIcon>
         <ListItemText primary="Paths" />
       </ListItem>
+      </Link>
     </List>
     <Divider />
     <List>
@@ -106,8 +96,5 @@ const AppBarMenuItems = ({ onClick, logout }) => (
 
 export const AppBarMenuItemsExport = AppBarMenuItems;
 
-DrawerMenuItems.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(DrawerMenuItems);
