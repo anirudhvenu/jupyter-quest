@@ -1,17 +1,27 @@
-import {Course_Join} from '../app-constant';
+import { Course_Join,
+    Course_Join_Fail,
+    Course_Join_Success
+ } from '../app-constant';
 
-export const Course_Init_State = {
-    'joinCourse':[]
-}
+const CourseReducer = (state = {
+    passwordMatchSuccess:false,
+    passwordMatchLoading:false,
+    passwordMatchFail:false
+    
+}, action) => {
 
-export default ( state = Course_Init_State, action ) => {
     switch (action.type) {
-        case Course_Join:
-            
-            return state;
-    
-        default:
-            return state;
-    }
-    
+            case Course_Join :{
+                return{...state, passwordMatchLoading:true, passwordMatchSuccess: false}
+            }
+            case Course_Join_Success :{
+                return{...state, passwordMatchLoading:false, passwordMatchSuccess:true}
+            }
+            case Course_Join_Fail :{
+                return{...state, passwordMatchLoading:false, passwordMatchSuccess:false}
+            }
+            default:
+            return state
+        }
 }
+export default CourseReducer
