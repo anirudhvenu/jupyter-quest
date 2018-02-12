@@ -37,10 +37,18 @@ const styles = theme => ({
     maxHeight:'400px',
     overflowY:'scroll'
   },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 400,
+  },
   fab: {
     margin: theme.spacing.unit * 2,
   },
-  absolute: {
+  input: {
+    display: 'none',
+  },
+absolute: {
     position: 'absolute',
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 3,
@@ -70,20 +78,20 @@ handleInput=(e)=>{
 this.setState({[e.target.name]:e.target.value})
 }
 submitProblem=(formData)=>{
-let problemData = {problem:formData.name, file:"xyz.json"}
-this.props.firebase.push(`/problems/${this.state.pathId}/`, problemData)
-.then( data => {
-  // wait for db to send response\
-  let pathTitle = this.state.title;
-this.props.firebase.set(`/path/${this.state.pathId}/`, {problems:true, title:pathTitle})
-.then( data => {
-  this.handleNotification('Problem Added Successfully');
-})
-this.setState({name:''})
-this.closeProblem()
-this.props.handleClose()
-}) 
-.catch( error => {console.error(error)} )
+  let problemData = {problem:formData.name, file:formData.uploadedProblem}
+  this.props.firebase.push(`/problems/${this.state.pathId}/`, problemData)
+  .then( data => {
+    // wait for db to send response\
+    let pathTitle = this.state.title;
+  this.props.firebase.set(`/path/${this.state.pathId}/`, {problems:true, title:pathTitle})
+  .then( data => {
+    this.handleNotification('Problem Added Successfully');
+  })
+  this.setState({name:''})
+  this.closeProblem()
+  this.props.handleClose()
+  }) 
+  .catch( error => {console.error(error)} )
 }
 createProblem=(id, pathTitle)=>{
   this.setState({isActive:true, pathId:id, title:pathTitle})
@@ -91,6 +99,7 @@ createProblem=(id, pathTitle)=>{
 closeProblem=()=>{
   this.setState({isActive:false})
 }
+
 
   render() {
     const { classes, openModel, handleClose, allPath, addpath} = this.props;
@@ -111,12 +120,20 @@ closeProblem=()=>{
             <div>
             <List>
       {allPath ? <div>{ allPath.map((path,index)=>(
-       <ListItem key={index} button>
+        <List key={path.key}>
+        <ListItem key={index} button>
         <ListItemIcon>
         <StarIcon />
         </ListItemIcon>
         <ListItemText onClick={()=>this.createProblem(path.key, path.value.title)} primary={path.value.title} />
       </ListItem>
+          </List>
+    //  <ListItem key={index} button>
+      //   <ListItemIcon>
+      //   <StarIcon />
+      //   </ListItemIcon>
+      //   <ListItemText onClick={()=>this.createProblem(path.key, path.value.title)} primary={path.value.title} />
+      // </ListItem>
       ))} </div> :''}
       <ListItem button>
         <ListItemIcon>

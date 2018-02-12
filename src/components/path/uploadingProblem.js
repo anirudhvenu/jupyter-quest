@@ -10,6 +10,7 @@ import AddIcon from 'material-ui-icons/Add';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List'
 import StarIcon from 'material-ui-icons/Star'
 import TextField from 'material-ui/TextField/TextField';
+import readJson from '../../helpers/readJson.js';
 
 function getModalStyle() {
   const top = '50';
@@ -48,12 +49,20 @@ const styles = theme => ({
 });
 
 class UploadsQuestions extends React.Component {
-    constructor(props){
-        super(props)
-  this.state = { };
-}
+  constructor(props){
+    super(props)
+    this.state = { 
+      uploadedProblem:null    
+    };
+  }
+  fileHandle = (e) => {
+    readJson(e.target.files[0], (data) => {
+      this.setState({"uploadedProblem":data});
+    })
+  }
 
   render() {
+    const {uploadedProblem} = this.state;
     const { classes, openFile, handleCloseFile, name, handleInput, handleSubmitFile } = this.props;
     return (
       <div>
@@ -79,19 +88,19 @@ class UploadsQuestions extends React.Component {
         </div><br/><br/>
             </Typography>
             <Typography type="subheading" id="simple-modal-description">
-            <input
+              <input
               accept=".json"
               className={classes.input}
               id="raised-button-file"
-              multiple
               type="file"
+              onChange={this.fileHandle}
             />
-             <br />
+            <br />
             <label style={{marginRight:'10px'}} htmlFor="raised-button-file">
               <Button raised component="span" color="default" className={classes.button}> Upload File </Button>
             </label>
             <Button className="cancelBtn" 
-              raised color="primary" onClick={ () => {handleSubmitFile({name}) }}>Submit</Button>
+              raised color="primary" onClick={ () => {handleSubmitFile({name, uploadedProblem}) }}>Submit</Button>
               <Button className="cancelBtn" 
               raised color="default" onClick={()=> handleCloseFile() }>Cancel</Button>
             </Typography>
