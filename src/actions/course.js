@@ -1,5 +1,4 @@
 
-import axios from 'axios';
 import { Course_Join } from '../app-constant'
 
 export const joinCourse = (payload) => ({
