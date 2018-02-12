@@ -12,6 +12,7 @@ import Modal from 'material-ui/Modal';
 import {CreateCourse} from '../components/courses/';
 import Notification from '../components/notification';
 import {BASE_URL} from '../config';
+import * as courseAction from '../actions'
   /**
    * A simple table demonstrating the hierarchy of the `Table` component and its sub-components.
    */
@@ -136,7 +137,7 @@ function getModalStyle() {
       this.cancelSubmit()
     }
     render(){
-      const {classes, courses, auth, firebase, publicCourses, joinedCourses }  = this.props;
+      const {classes, courses, auth, firebase, publicCourses, joinedCourses, joinCourse }  = this.props;
       const { open, message, courseLink, nameRequired, pwdRequired } = this.state;
       let publicCourse;
       if(publicCourses){
@@ -147,7 +148,8 @@ function getModalStyle() {
        <Notification message={message} open={open} handleClose={this.closeNotification}/>
       <AppFrame pageTitle="Courses" >
        <Button raised onClick={this.createCourse}>Create a Course</Button>
-       <CourseTable firebase={firebase} courses={courses} auth={auth} publicCourses={publicCourse} joinedCourses={joinedCourses} /> 
+       <CourseTable firebase={firebase} courses={courses} auth={auth}
+        publicCourses={publicCourse} joinedCourses={joinedCourses} joinCourse={joinCourse}/> 
        <div>
          {!courseLink && 
          <CreateCourse 
@@ -182,6 +184,13 @@ function getModalStyle() {
 }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    joinCourse: (payload) => {
+      dispatch(courseAction.joinCourse(payload))
+    }
+  }
+}
 const CoursesWithFirebase = compose(
   firebaseConnect( (props, store) => {
     return [
@@ -205,7 +214,7 @@ const CoursesWithFirebase = compose(
     courses: firebase.ordered.myCourses, 
     publicCourses: firebase.ordered.publicCourses,
     joinedCourses: firebase.ordered.joinedCourses
-  }))
+  }), mapDispatchToProps)
 )(Courses)
 
  Courses.propTypes = {
