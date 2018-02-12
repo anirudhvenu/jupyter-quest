@@ -4,7 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import logger from 'redux-logger';
 import { reactReduxFirebase, getFirebase } from 'react-redux-firebase'
 import * as firebase from 'firebase';
-import rootSaga from './rootSaga';
+import rootSaga from './sagas/';
 // import reducers
 import reducers from './reducers/';
 

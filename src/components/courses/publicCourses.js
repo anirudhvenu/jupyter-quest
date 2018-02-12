@@ -127,28 +127,13 @@ class PublicCourse extends React.Component {
   };
 
   submitJoin=(e)=>{
-    let mainPwd = this.state.coursePwd
+    let coursePasswordHash = this.state.coursePwd
     let studentPwd = e.password
     let userId = this.props.auth.uid
     let courseKey = this.state.courseId
     let courseName = this.state.courseName
     
-    if(mainPwd === studentPwd){
-      this.props.firebase.set(`courseMembers/${courseKey}/${userId}`,true ).then( data => {
-        this.props.firebase.set(`myCourses/${userId}/${courseKey}`,{joined:true, title:courseName} ).then( data => {
-          // wait for db to send response\
-          this.openNotification('You joined course ');
-          this.handleClose();
-        })
-      }) ;
-    }  else{
-      this.openNotification('Password not matched');
-      this.handleClose();
-    }
-      // this.handleClose();
-      // this.setState( ()=> { return {password:''} } )
-
-      // this.openNotification('Functionality to be developed');
+    this.props.joinCourse(studentPwd,coursePasswordHash)
   }
 
   handleOpen = (pwd, courseKey, courseName) => {
@@ -167,10 +152,9 @@ class PublicCourse extends React.Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
   render() {
-    const { classes, data, columnData, joinedCourses } = this.props;
+    const { classes, data, columnData, joinedCourses} = this.props;
     const { order, orderBy, selected, rowsPerPage, page, password, vertical,openNotification, horizontal, message } = this.state;
     const emptyRows = data ? rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage) :'';
-    console.log(joinedCourses,"<<<>>>>")
     return (
         <div>
         <Paper className={classes.root}>

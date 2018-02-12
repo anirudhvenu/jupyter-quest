@@ -64,7 +64,7 @@ class CoursesContainer extends React.Component {
   };
 
   render() {
-    const { classes, courses, publicCourses, firebase, auth, joinedCourses } = this.props;
+    const { classes, courses, publicCourses, firebase, auth, joinedCourses, joinCourse} = this.props;
 
     let activeTab = <h2>No data</h2>;
     switch (this.state.value) {
@@ -78,7 +78,7 @@ class CoursesContainer extends React.Component {
       }
       case 2: {
         activeTab = publicCourses ? <PublicCourses columnData={columnData}
-         firebase={firebase} auth={auth} data={publicCourses} joinedCourses={joinedCourses} />: <h2>No data</h2>;
+         firebase={firebase} auth={auth} data={publicCourses} joinedCourses={joinedCourses} joinCourse={joinCourse}/>: <h2>No data</h2>;
         break;
       }
       default : {

@@ -1,8 +1,8 @@
-import {Course_Join} from '../app-constant';
 
-export joinCourse = (password) => {
-    return {
-        type: Course_Join,
-        payload:password
-    }
-}
+import axios from 'axios';
+import { Course_Join } from '../app-constant'
+
+export const joinCourse = (payload) => ({
+  type :Course_Join,
+  payload
+})
